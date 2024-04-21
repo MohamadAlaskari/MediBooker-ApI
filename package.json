@@ -7,5 +7,19 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mohamad Alaskari",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MohamadAlaskari/MediBooker-ApI.git"
+  },
+  "keywords": [
+    "Praxisterminen",
+    "Verwaltung",
+    "Ärzten",
+    "Patiententerminen"
+  ],
+  "bugs": {
+    "url": "https://github.com/MohamadAlaskari/MediBooker-ApI/issues"
+  },
+  "homepage": "https://github.com/MohamadAlaskari/MediBooker-ApI#readme"
 }
