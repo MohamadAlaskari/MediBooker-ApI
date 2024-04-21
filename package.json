@@ -1,0 +1,11 @@
+{
+  "name": "medibooker-api",
+  "version": "1.0.0",
+  "description": "\"Web-basierte App zur Verwaltung von Praxisterminen, ermöglicht Ärzten und medizinischem Personal das einfache Planen und Koordinieren von Patiententerminen.\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mohamad Alaskari",
+  "license": "ISC"
+}
