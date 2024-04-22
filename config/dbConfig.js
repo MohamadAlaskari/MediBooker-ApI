@@ -1,10 +1,21 @@
-const { sequelize } = require('sequelize');
-const dbConfig={
-    dialect: 'mysql',         // Datenbanktyp (hier: MySQL)
-    host: process.env.HOSTNAME,   // Hostname der Datenbank
-    username: process.env.USERNAME, // Benutzername
-    password: process.env.PASSWORD, // Passwort
-    database: process.env.DATABASE  // Name der Datenbank
+const { Sequelize } = require('sequelize');
+const dbConfig = {
+    dialect: 'mysql',
+    host: process.env.HOSTNAME,
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
 };
-const sequelize= new Sequelize(dbConfig);
+const sequelize = new Sequelize(dbConfig);
+
+
+// Test der Datenbankverbindung
+sequelize.authenticate()
+    .then(() => {
+        console.log('Verbindung zur Datenbank erfolgreich hergestellt.');
+    })
+    .catch(err => {
+        console.error('Verbindung zur Datenbank fehlgeschlagen:', err);
+    });
+    
 module.exports = sequelize;
