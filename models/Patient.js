@@ -15,7 +15,7 @@ Patient.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
-    lastname: {
+    surname: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -49,6 +49,23 @@ Patient.init({
         type: DataTypes.ENUM('private', 'gesetzlich'),
         allowNull: false,
     },
+    street: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    hNr: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    postcode: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    city: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+
     createdAt: {
         type: DataTypes.DATE,
     },

@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
+
 const port = process.env.PORT || 5000;
+
 app.use(express.json());
+
 // In deiner Hauptdatei (z.B. index.js)
 const sequelize = require('./config/dbConfig');
 
