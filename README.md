@@ -6,3 +6,6 @@ https://auth-db972.hstgr.io/index.php?route=/sql&server=1&db=u252525807_T_verwal
 
 username: u252525807_Admin
 password: MediBooker4
+
+
+npm run sync-db
