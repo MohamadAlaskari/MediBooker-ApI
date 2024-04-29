@@ -16,7 +16,9 @@ sequelize.sync().then(() => {
 
 
 
+const employeesRoutes = require('./routes/employeesRoutes');
 const patientsRoutes = require('./routes/patientsRoutes');
+app.use('/employee', employeesRoutes);
 app.use('/patient', patientsRoutes);
 
 
