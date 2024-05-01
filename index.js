@@ -8,10 +8,14 @@ const port = process.env.PORT || 5000;
 const patientsRoutes = require('./routes/patientsRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
+const employeesRoutes = require('./routes/employeesRoutes');
+
 
 app.use('/patient', patientsRoutes);
 app.use('/services', serviceRoutes);
 app.use('/appointments', appointmentRoutes);
+app.use('/employee', employeesRoutes);
+
 
 app.use(express.json());
 
@@ -23,13 +27,6 @@ sequelize.sync().then(() => {
 }).catch((error) => {
     console.error('Synchronisierung der Modelle fehlgeschlagen:', error);
 });
-
-
-
-const employeesRoutes = require('./routes/employeesRoutes');
-const patientsRoutes = require('./routes/patientsRoutes');
-app.use('/employee', employeesRoutes);
-app.use('/patient', patientsRoutes);
 
 
 app.use(bodyParser.json());
