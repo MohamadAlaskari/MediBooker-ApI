@@ -1,11 +1,8 @@
-const { Model, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../config/dbConfig');
 
 
-class Patient extends Model {
-
-}
-Patient.init({
+const Patient = sequelize.define('Patient', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -64,21 +61,7 @@ Patient.init({
     city: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-
-    createdAt: {
-        type: DataTypes.DATE,
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-    },
-},
-    {
-        sequelize,
-        modelName: 'Patient',
-        tableName: 'Patient',
     }
-
-)
+});
 
 module.exports = Patient;

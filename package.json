@@ -1,33 +1,35 @@
 {
-  "name": "medibooker-api",
-  "version": "1.0.0",
-  "description": "Web-basierte App zur Verwaltung von Praxisterminen, ermöglicht Ärzten und medizinischem Personal das einfache Planen und Koordinieren von Patiententerminen.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "env-cmd -f dev.env nodemon index.js",
-    "mysql": "nodemon test.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MohamadAlaskari/MediBooker-ApI.git"
-  },
-  "keywords": [
-    "termin"
-  ],
-  "author": "Mohamad Alaskari, Sudki koulak, Omar Zyiada, Oussama",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MohamadAlaskari/MediBooker-ApI/issues"
-  },
-  "homepage": "https://github.com/MohamadAlaskari/MediBooker-ApI#readme",
-  "dependencies": {
-    "bcrypt": "^5.1.1",
-    "cors": "^2.8.5",
-    "env-cmd": "^10.1.0",
-    "express": "^4.19.2",
-    "mysql2": "^3.9.7",
-    "nodemon": "^3.1.0",
-    "sequelize": "^6.37.3"
-  }
+    "name": "medibooker-api",
+    "version": "1.0.0",
+    "description": "Web-basierte App zur Verwaltung von Praxisterminen, ermöglicht Ärzten und medizinischem Personal das einfache Planen und Koordinieren von Patiententerminen.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "env-cmd -f dev.env nodemon index.js",
+        "mysql": "nodemon test.js",
+        "start": "node index.js",
+        "sync-db": "node sync-db.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MohamadAlaskari/MediBooker-ApI.git"
+    },
+    "keywords": [
+        "termin"
+    ],
+    "author": "Mohamad Alaskari, Sudki koulak, Omar Zyiada, Oussama",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/MohamadAlaskari/MediBooker-ApI/issues"
+    },
+    "homepage": "https://github.com/MohamadAlaskari/MediBooker-ApI#readme",
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "cors": "^2.8.5",
+        "env-cmd": "^10.1.0",
+        "express": "^4.19.2",
+        "mysql2": "^3.9.7",
+        "nodemon": "^3.1.0",
+        "sequelize": "^6.37.3"
+    }
 }
