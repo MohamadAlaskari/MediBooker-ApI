@@ -1,0 +1,75 @@
+const Service = require('../models/Service');
+const bcrypt = require('bcrypt');
+
+async function getAllServices(req, res) {
+    try {
+        const services = await Service.findAll();
+        if (services.length === 0) {
+            return res.status(404).json({ error: 'Keine Dienste gefunden!' });
+        }
+        return res.status(200).json(services);
+    } catch (error) {
+        console.error("Fehler beim Abrufen der Daten:", error);
+        return res.status(500).json({ error: error.message || 'Ein Fehler ist beim Abrufen der Daten aufgetreten.' });
+    }
+}
+
+async function addService(req, res) {
+    try {
+        const { type, description } = req.body;
+        await Service.create({ type, description });
+        return res.status(201).json({ message: 'Dienst erfolgreich hinzugefügt!' });
+    } catch (error) {
+        console.error('Error adding service:', error);
+        return res.status(500).json({ error: 'Ein Fehler ist beim Hinzufügen des Dienstes aufgetreten!' });
+    }
+}
+
+async function updateService(req, res) {
+    try {
+        const { id } = req.params;
+        const updates = req.body;
+        const [updatedRowsCount] = await Service.update(updates, { where: { id } });
+        if (updatedRowsCount === 0) {
+            return res.status(404).json({ error: 'Dienst nicht gefunden!' });
+        }
+        return res.status(200).json({ message: 'Dienst erfolgreich aktualisiert!' });
+    } catch (error) {
+        console.error('Fehler beim Aktualisieren des Dienstes:', error);
+        return res.status(500).json({ error: 'Ein Fehler ist beim Aktualisieren des Dienstes aufgetreten!' });
+    }
+}
+
+async function deleteService(req, res) {
+    try {
+        const { id } = req.params;
+        const deletedRowsCount = await Service.destroy({ where: { id } });
+        if (deletedRowsCount === 0) {
+            return res.status(404).json({ error: 'Dienst nicht gefunden!' });
+        }
+        return res.status(200).json({ message: 'Dienst erfolgreich gelöscht!' });
+    } catch (error) {
+        console.error('Fehler beim Löschen des Dienstes:', error);
+        return res.status(500).json({ error: 'Ein Fehler ist beim Löschen des Dienstes aufgetreten!' });
+    }
+}
+async function getServiceById(req, res) {
+    try {
+        const { id } = req.params;
+        const service = await Service.findByPk(id);
+        if (!service) {
+            return res.status(404).json({ error: 'Dienst nicht gefunden!' });
+        }
+        return res.status(200).json(service);
+    } catch (error) {
+        console.error('Fehler beim Abrufen des Dienstes:', error);
+        return res.status(500).json({ error: 'Ein Fehler ist beim Abrufen des Dienstes aufgetreten!' });
+    }
+}
+module.exports = {
+    getAllServices,
+    addService,
+    getServiceById,
+    updateService,
+    deleteService
+};

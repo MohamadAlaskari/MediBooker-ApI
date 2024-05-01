@@ -16,12 +16,13 @@ async function getAll(req, res) {
 }
 async function signup(req, res) {
     try {
-        const { name, lastname, dob, email, password, phoneNr, healthInsurance, insuranceType, insuranceNr } = req.body;
+        const { name, surname, dob, email, password, phoneNr, healthInsurance, insuranceType, insuranceNr, street, hNr, postcode, city } = req.body;
+
 
         // Hash das Passwort, bevor es in die Datenbank gespeichert wird
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await Patient.create({ name, lastname, dob, email, password: hashedPassword, phoneNr, healthInsurance, insuranceType, insuranceNr });
+        await Patient.create({ name, surname, dob, email, password: hashedPassword, phoneNr, healthInsurance, insuranceType, insuranceNr, street, hNr, postcode, city });
 
         return res.status(201).json({ message: 'User registered successfully!' });
     } catch (error) {
