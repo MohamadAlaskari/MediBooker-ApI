@@ -19,15 +19,6 @@ app.use('/employee', employeesRoutes);
 
 app.use(express.json());
 
-// In deiner Hauptdatei (z.B. index.js)
-const sequelize = require('./config/dbConfig');
-
-sequelize.sync().then(() => {
-    console.log('Modelle wurden mit der Datenbank synchronisiert.');
-}).catch((error) => {
-    console.error('Synchronisierung der Modelle fehlgeschlagen:', error);
-});
-
 
 app.use(bodyParser.json());
 try {
