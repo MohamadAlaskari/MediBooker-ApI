@@ -25,11 +25,29 @@ async function create(req, res) {
 
 async function update(req, res) {
     try {
-        const { id, ...updates } = req.body;
+        const { id, appointmentId, patientId, serviceId, ...updates } = req.body;
+
+        // Handle updates to associated models if foreign keys are provided
+        if (appointmentId || patientId || serviceId) {
+            // Check if foreign key fields are provided and update associated models if necessary
+            // For example, you might need to update the associated appointment, patient, or service here
+            if (appointmentId) {
+                await Appointment.update(updates, { where: { id: appointmentId } });
+            }
+            if (patientId) {
+                await Patient.update(updates, { where: { id: patientId } });
+            }
+            if (serviceId) {
+                await Service.update(updates, { where: { id: serviceId } });
+            }
+        }
+
         const [updatedRowsCount] = await Reservation.update(updates, { where: { id } });
+
         if (updatedRowsCount === 0) {
             return res.status(404).json({ error: 'Reservation not found!' });
         }
+
         return res.status(200).json({ message: 'Reservation updated successfully!' });
     } catch (error) {
         console.error('Error updating reservation:', error);
