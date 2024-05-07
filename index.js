@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
-const { authenticateToken } = require('./middlewares/authenticateToken');
+
 // Routes
 const patientsRoutes = require('./routes/patientsRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');

@@ -61,7 +61,13 @@ const Patient = sequelize.define('Patient',
         city: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        active:{
+            type: DataTypes.BOOLEAN,
+            defaultValue: false, 
+            allowNull: false
         }
+        
     },
     {
         sequelize,

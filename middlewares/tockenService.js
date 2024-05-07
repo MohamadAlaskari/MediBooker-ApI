@@ -5,6 +5,6 @@ const generateRandomSecretKey = () => {
 };
 
 const jwtSecret = generateRandomSecretKey();
-const jwtExpiration = '30m';
+const jwtExpiration = '1m';
 
 module.exports = { jwtSecret, jwtExpiration }

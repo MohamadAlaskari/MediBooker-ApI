@@ -28,5 +28,17 @@ function authenticateToken(req, res, next) {
     });
 
 }
+async function findPatientIdByToken(token,res) {
+    try {
+        const patientToken = await PatientToken.findOne({ where: { token } });
+        if (!patientToken) {
+            return res.status(404).json({ error: 'Patient not found!' }); 
+        }
+        return res.status(200).json({ message: 'token found successful!', patientId:patientToken.patientId });;
+    } catch (error) {
+        console.error('Error finding patient ID by token:', error);
+        return res.status(500).json({ error: 'An error occurred while finding patient ID by token!' });
+    }
+}
 
-module.exports = { authenticateToken };
+module.exports = { authenticateToken, findPatientIdByToken };

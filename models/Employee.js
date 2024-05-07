@@ -49,6 +49,11 @@ const Employee = sequelize.define('Employee',
         updatedAt: {
             type: DataTypes.DATE,
         },
+        active:{
+            type: DataTypes.BOOLEAN,
+            defaultValue: false, 
+            allowNull: false
+        }
     },
     {
         sequelize,

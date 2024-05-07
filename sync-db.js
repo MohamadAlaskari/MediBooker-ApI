@@ -8,8 +8,14 @@ const Rservation = require('./models/Reservation');
 (async () => {
     try {
       // Synchronisiere die Tabellen, ohne sie zu löschen und neu zu erstellen
+      
       await Patient.sync();
       await PatientToken.sync();
+      await Service.sync();
+      await Appointment.sync();
+      await Employee.sync();
+      await Rservation.sync();
+      
       console.log('Datenbank synchronisiert.');
       process.exit(0); // Beende den Prozess nach erfolgreicher Synchronisierung
     } catch (error) {

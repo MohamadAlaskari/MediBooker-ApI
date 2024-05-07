@@ -15,6 +15,6 @@ const PatientToken = sequelize.define('PatientToken', {
     });
 
 // Definiere die Beziehung zur Patienten-Tabelle
-PatientToken.belongsTo(Patient);
+PatientToken.belongsTo(Patient ,{ foreignKey: 'patientId' });
 
 module.exports = PatientToken;

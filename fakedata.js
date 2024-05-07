@@ -23,6 +23,7 @@ const generatePatients = async () => {
             hNr: Faker.random.number({ min: 1, max: 99 }),
             postcode: Faker.address.zipCode(),
             city: Faker.address.city(),
+            active: false,
         });
         patients.push(patient);
     }
