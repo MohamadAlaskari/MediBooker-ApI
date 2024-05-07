@@ -7,6 +7,7 @@ const patientsRoutes = require('./routes/patientsRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const employeesRoutes = require('./routes/employeesRoutes');
+const reservationRoutes = require('./routes/reservationRoutes');
 
 // Parse JSON bodies
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use('/patient', patientsRoutes);
 app.use('/service', serviceRoutes);
 app.use('/appointment', appointmentRoutes);
 app.use('/employee', employeesRoutes);
+app.use('/reservation', reservationRoutes);
 
 try {
     app.listen(port, () => console.log(`Server running on http://localhost:${port}`));

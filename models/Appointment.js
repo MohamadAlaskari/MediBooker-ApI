@@ -28,6 +28,5 @@ const Appointment = sequelize.define('Appointment', {
         modelName: 'Appointment',
         tableName: 'Appointment',
     });
-Appointment.belongsTo(Patient);
-Appointment.belongsTo(Service);
+
 module.exports = Appointment;
