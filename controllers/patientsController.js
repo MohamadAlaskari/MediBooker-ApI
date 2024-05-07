@@ -2,7 +2,7 @@ const Patient = require('../models/Patient');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const PatientToken = require('../models/PatientToken')
-const { jwtSecret, jwtExpiration } = require('../config/dbConfig');
+const { jwtSecret, jwtExpiration } = require('../middlewares/tockenService');
 
 
 
@@ -65,7 +65,7 @@ async function updatePatient(req, res) {
         if (updates.password) {
             updates.password = await bcrypt.hash(updates.password, 10);
         }
-        const [updatedRowsCount] = await Patient.update(updates, { where: {id} });
+        const [updatedRowsCount] = await Patient.update(updates, { where: { id } });
 
         if (updatedRowsCount === 0) {
             return res.status(404).json({ error: 'Patient not found!' });
@@ -96,13 +96,13 @@ async function login(req, res) {
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Incorrect email or password!' });
         }
-        console.log('Patient:', patient.id)+ "3";
+        console.log('Patient:', patient.id) + "3";
         // Generate random token
-        const token = jwt.sign({ patientId: patient.id}, jwtSecret, { expiresIn: jwtExpiration });
+        const token = jwt.sign({ patientId: patient.id }, jwtSecret, { expiresIn: jwtExpiration });
 
         // Speichere das Token in der PatientToken-Tabelle
         await PatientToken.create({ token, patientId: patient.id });
-        
+
         return res.status(200).json({ message: 'Login successful!', token });
     } catch (error) {
         console.error('Error logging in:', error);
