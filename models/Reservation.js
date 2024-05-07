@@ -1,6 +1,9 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/dbConfig');
-const Reservation = require('./Reservation');
+const Appointment = require('./Appointment');
+const Patient = require('./Patient');
+const Service = require('./Service');
+
 
 
 const Reservation = sequelize.define('Reservation',
@@ -10,13 +13,13 @@ const Reservation = sequelize.define('Reservation',
             autoIncrement: true,
             primaryKey: true,
         }
-      },
+    },
     {
         sequelize,
         modelName: 'Reservation',
         tableName: 'Reservation',
     });
-    Reservation.belongsTo(Appointment);
-    Reservation.belongsTo(Patient);
-    Reservation.belongsTo(Service);
+Reservation.belongsTo(Appointment);
+Reservation.belongsTo(Patient);
+Reservation.belongsTo(Service);
 module.exports = Reservation;
