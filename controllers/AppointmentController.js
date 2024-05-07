@@ -43,12 +43,11 @@ async function updateAppointment(req, res) {
         const { id } = req.query;
         const appointments = req.body;
         const [appointment] = await Appointment.update(appointments, { where: { id } });
-       
+
         if (appointment === 0) {
             return res.status(404).json({ error: 'Termin nicht gefunden!' });
         }
-        console.log(appointment)
-        return res.status(200).json(appointment);
+        return res.status(200).json({ message: 'appointment updated successfully' });
     } catch (error) {
         console.error("Fehler beim Aktualisieren des Termins:", error);
         return res.status(500).json({ error: 'Ein Fehler ist beim Aktualisieren des Termins aufgetreten.' });
