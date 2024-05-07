@@ -13,11 +13,11 @@ const reservationRoutes = require('./routes/reservationRoutes');
 app.use(express.json());
 
 // Define routes
-app.use('/patient', patientsRoutes);
-app.use('/service', serviceRoutes);
-app.use('/appointment', authenticateToken, appointmentRoutes);
+app.use('/patient',patientsRoutes);
+app.use('/service' , serviceRoutes);
+app.use('/appointment' , appointmentRoutes);
 app.use('/employee', employeesRoutes);
-app.use('/reservation', reservationRoutes);
+app.use('/reservation' ,reservationRoutes);
 
 try {
     app.listen(port, () => console.log(`Server running on http://localhost:${port}`));

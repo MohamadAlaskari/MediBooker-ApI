@@ -1,6 +1,7 @@
 const Patient = require('../models/Patient');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
+const PatientToken = require('../models/PatientToken')
 const { jwtSecret, jwtExpiration } = require('../config/dbConfig');
 
 
@@ -79,12 +80,13 @@ async function updatePatient(req, res) {
     }
 }
 
+
 async function login(req, res) {
     try {
         const { email, password } = req.body;
 
         const patient = await Patient.findOne({ where: { email } });
-
+        //console.log(patient)
         if (!patient) {
             return res.status(401).json({ error: 'Incorrect email or password!' });
         }
@@ -94,10 +96,13 @@ async function login(req, res) {
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Incorrect email or password!' });
         }
+        console.log('Patient:', patient.id)+ "3";
+        // Generate random token
+        const token = jwt.sign({ patientId: patient.id}, jwtSecret, { expiresIn: jwtExpiration });
 
-        // Generate JWT token
-        const token = jwt.sign({ patientId: patient.id, email: patient.email }, jwtSecret, { expiresIn: jwtExpiration });
-
+        // Speichere das Token in der PatientToken-Tabelle
+        await PatientToken.create({ token, patientId: patient.id });
+        
         return res.status(200).json({ message: 'Login successful!', token });
     } catch (error) {
         console.error('Error logging in:', error);
