@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 
 const dbConfig = {
     dialect: 'mysql',
-    host: 'srv972.hstgr.io', // Use the environment variable for host
+    host: 'srv972.hstgr.io',
     username: 'u252525807_Admin',
     password: 'MediBooker4',
     database: 'u252525807_T_verwaltung'
