@@ -19,7 +19,10 @@ const Reservation = sequelize.define('Reservation',
         modelName: 'Reservation',
         tableName: 'Reservation',
     });
+
+// foriegn keys
 Reservation.belongsTo(Appointment);
 Reservation.belongsTo(Patient);
 Reservation.belongsTo(Service);
+
 module.exports = Reservation;
