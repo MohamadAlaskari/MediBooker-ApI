@@ -8,7 +8,7 @@
         "start": "env-cmd -f dev.env nodemon index.js",
         "mysql": "nodemon test.js",
         "start": "node index.js",
-        "db init": "node sync-db.js"
+        "dbInit": "node sync-db.js"
     },
     "repository": {
         "type": "git",
