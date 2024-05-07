@@ -1,4 +1,6 @@
 const { Sequelize } = require('sequelize');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 const dbConfig = {
     dialect: 'mysql',
@@ -19,4 +21,12 @@ sequelize.authenticate()
         console.error('Verbindung zur Datenbank fehlgeschlagen:', err);
     });
 
-module.exports = sequelize;
+const generateRandomSecretKey = () => {
+    return crypto.randomBytes(32).toString('hex');
+};
+
+const jwtSecret = generateRandomSecretKey(); 
+const jwtExpiration = '30m'; 
+
+module.exports = { sequelize, jwtSecret, jwtExpiration };
+

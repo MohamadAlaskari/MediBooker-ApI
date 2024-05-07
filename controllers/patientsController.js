@@ -1,5 +1,9 @@
 const Patient = require('../models/Patient');
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken');
+const { jwtSecret, jwtExpiration } = require('../config/dbConfig');
+
+
 
 async function getAll(req, res) {
     try {
@@ -91,12 +95,10 @@ async function login(req, res) {
             return res.status(401).json({ error: 'Incorrect email or password!' });
         }
 
+        // Generate JWT token
+        const token = jwt.sign({ patientId: patient.id, email: patient.email }, jwtSecret, { expiresIn: jwtExpiration });
 
-
-
-        // Hier können Sie je nach Anforderung eine JWT-Authentifizierung implementieren
-
-        return res.status(200).json({ message: 'Login successful!', patient });
+        return res.status(200).json({ message: 'Login successful!', token });
     } catch (error) {
         console.error('Error logging in:', error);
         return res.status(500).json({ error: 'An error occurred while logging in!' });
