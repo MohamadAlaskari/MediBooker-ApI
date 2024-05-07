@@ -64,7 +64,7 @@ async function updatePatient(req, res) {
         if (updates.password) {
             updates.password = await bcrypt.hash(updates.password, 10);
         }
-        const [updatedRowsCount] = await Patient.update(updates, { where: { id } });
+        const [updatedRowsCount] = await Patient.update(updates, { where: {id} });
 
         if (updatedRowsCount === 0) {
             return res.status(404).json({ error: 'Patient not found!' });

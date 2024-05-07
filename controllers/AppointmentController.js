@@ -3,6 +3,9 @@ const Appointment = require('../models/Appointment');
 async function getAllAppointments(req, res) {
     try {
         const appointments = await Appointment.findAll();
+        if (!appointments) {
+            return res.status(200).json("no appointments found!");
+        }
         return res.status(200).json(appointments);
     } catch (error) {
         console.error("Fehler beim Abrufen der Termine:", error);
@@ -12,7 +15,7 @@ async function getAllAppointments(req, res) {
 
 async function getAppointmentById(req, res) {
     try {
-        const { id } = req.params;
+        const { id } = req.query;
         const appointment = await Appointment.findByPk(id);
         if (!appointment) {
             return res.status(404).json({ error: 'Termin nicht gefunden!' });
@@ -26,8 +29,8 @@ async function getAppointmentById(req, res) {
 
 async function createAppointment(req, res) {
     try {
-        const { date, hour, description, patientId, serviceId } = req.body;
-        const appointment = await Appointment.create({ date, hour, description, PatientId: patientId, ServiceId: serviceId });
+        const { date, hour, description } = req.body;
+        const appointment = await Appointment.create({ date, hour, description });
         return res.status(201).json(appointment);
     } catch (error) {
         console.error("Fehler beim Erstellen des Termins:", error);
@@ -37,18 +40,14 @@ async function createAppointment(req, res) {
 
 async function updateAppointment(req, res) {
     try {
-        const { id } = req.params;
-        const { date, hour, description, patientId, serviceId } = req.body;
-        const appointment = await Appointment.findByPk(id);
-        if (!appointment) {
+        const { id } = req.query;
+        const appointments = req.body;
+        const [appointment] = await Appointment.update(appointments, { where: { id } });
+       
+        if (appointment === 0) {
             return res.status(404).json({ error: 'Termin nicht gefunden!' });
         }
-        appointment.date = date;
-        appointment.hour = hour;
-        appointment.description = description;
-        appointment.PatientId = patientId;
-        appointment.ServiceId = serviceId;
-        await appointment.save();
+        console.log(appointment)
         return res.status(200).json(appointment);
     } catch (error) {
         console.error("Fehler beim Aktualisieren des Termins:", error);
@@ -58,12 +57,11 @@ async function updateAppointment(req, res) {
 
 async function deleteAppointment(req, res) {
     try {
-        const { id } = req.params;
-        const appointment = await Appointment.findByPk(id);
+        const { id } = req.query;
+        const appointment = await Appointment.destroy({ where: { id } });
         if (!appointment) {
             return res.status(404).json({ error: 'Termin nicht gefunden!' });
         }
-        await appointment.destroy();
         return res.status(200).json({ message: 'Termin erfolgreich gelöscht!' });
     } catch (error) {
         console.error("Fehler beim Löschen des Termins:", error);

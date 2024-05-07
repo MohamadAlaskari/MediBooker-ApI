@@ -4,6 +4,9 @@ const Appointment = require('./Appointment');
 const Patient = require('./Patient');
 const Service = require('./Service');
 
+
+
+
 const Reservation = sequelize.define('Reservation',
     {
         id: {
@@ -11,13 +14,16 @@ const Reservation = sequelize.define('Reservation',
             autoIncrement: true,
             primaryKey: true,
         }
-      },
+    },
     {
         sequelize,
         modelName: 'Reservation',
         tableName: 'Reservation',
     });
-    Reservation.belongsTo(Appointment);
-    Reservation.belongsTo(Patient);
-    Reservation.belongsTo(Service);
+
+// foriegn keys
+Reservation.belongsTo(Appointment, { onDelete: 'CASCADE' });
+Reservation.belongsTo(Patient,  { onDelete: 'CASCADE' });
+Reservation.belongsTo(Service, { onDelete: 'CASCADE' });
+
 module.exports = Reservation;

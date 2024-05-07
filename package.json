@@ -6,8 +6,12 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node index.js",
+
         "mysql": "nodemon test.js",
-        "sync-db": "node sync-db.js"
+        
+
+        "dbInit": "node sync-db.js"
+
     },
     "repository": {
         "type": "git",
