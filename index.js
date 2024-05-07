@@ -13,8 +13,8 @@ app.use(express.json());
 
 // Define routes
 app.use('/patient', patientsRoutes);
-app.use('/services', serviceRoutes);
-app.use('/appointments', appointmentRoutes);
+app.use('/service', serviceRoutes);
+app.use('/appointment', appointmentRoutes);
 app.use('/employee', employeesRoutes);
 
 try {
