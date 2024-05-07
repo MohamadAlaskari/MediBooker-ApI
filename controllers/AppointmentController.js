@@ -15,7 +15,7 @@ async function getAllAppointments(req, res) {
 
 async function getAppointmentById(req, res) {
     try {
-        const { id } = req.body;
+        const { id } = req.query;
         const appointment = await Appointment.findByPk(id);
         if (!appointment) {
             return res.status(404).json({ error: 'Termin nicht gefunden!' });
@@ -40,12 +40,14 @@ async function createAppointment(req, res) {
 
 async function updateAppointment(req, res) {
     try {
-        const { id } = req.body;
+        const { id } = req.query;
         const appointments = req.body;
         const [appointment] = await Appointment.update(appointments, { where: { id } });
-        if (!appointment) {
+       
+        if (appointment === 0) {
             return res.status(404).json({ error: 'Termin nicht gefunden!' });
         }
+        console.log(appointment)
         return res.status(200).json(appointment);
     } catch (error) {
         console.error("Fehler beim Aktualisieren des Termins:", error);
@@ -55,7 +57,7 @@ async function updateAppointment(req, res) {
 
 async function deleteAppointment(req, res) {
     try {
-        const { id } = req.body;
+        const { id } = req.query;
         const appointment = await Appointment.destroy({ where: { id } });
         if (!appointment) {
             return res.status(404).json({ error: 'Termin nicht gefunden!' });
