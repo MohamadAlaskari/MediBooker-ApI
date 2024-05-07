@@ -21,8 +21,8 @@ const Reservation = sequelize.define('Reservation',
     });
 
 // foriegn keys
-Reservation.belongsTo(Appointment, { onDelete: 'CASCADE',foreignKey: { allowNull: false } });
-Reservation.belongsTo(Patient,  { onDelete: 'CASCADE',foreignKey: { allowNull: false } });
-Reservation.belongsTo(Service, { onDelete: 'CASCADE' ,foreignKey: { allowNull: false }});
+Reservation.belongsTo(Appointment, { onDelete: 'CASCADE' });
+Reservation.belongsTo(Patient,  { onDelete: 'CASCADE' });
+Reservation.belongsTo(Service, { onDelete: 'CASCADE' });
 
 module.exports = Reservation;
