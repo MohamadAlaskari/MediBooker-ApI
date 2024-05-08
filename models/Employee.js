@@ -1,6 +1,6 @@
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/dbConfig');
+const { sequelize } = require('../config/dbConfig');
 
 const Employee = sequelize.define('Employee',
     {
@@ -49,6 +49,11 @@ const Employee = sequelize.define('Employee',
         updatedAt: {
             type: DataTypes.DATE,
         },
+        active:{
+            type: DataTypes.BOOLEAN,
+            defaultValue: false, 
+            allowNull: false
+        }
     },
     {
         sequelize,

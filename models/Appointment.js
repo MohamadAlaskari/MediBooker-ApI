@@ -1,7 +1,9 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/dbConfig');
+
+const { sequelize } = require('../config/dbConfig');
 const Patient = require('./Patient');
 const Service = require('./Service');
+
 
 const Appointment = sequelize.define('Appointment', {
     id: {
@@ -20,9 +22,13 @@ const Appointment = sequelize.define('Appointment', {
     description: {
         type: DataTypes.STRING,
         allowNull: false
-    },
+    }
 
-});
-Appointment.belongsTo(Patient);
-Appointment.belongsTo(Service);
+},
+    {
+        sequelize,
+        modelName: 'Appointment',
+        tableName: 'Appointment',
+    });
+
 module.exports = Appointment;

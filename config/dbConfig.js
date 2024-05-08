@@ -2,10 +2,10 @@ const { Sequelize } = require('sequelize');
 
 const dbConfig = {
     dialect: 'mysql',
-    host: 'srv972.hstgr.io', // Use the environment variable for host
-    username: 'u252525807_Admin',
-    password: 'MediBooker4',
-    database: 'u252525807_T_verwaltung'
+    host:process.env.HOSTNAME ,
+    username:process.env.USERNAME ,
+    password:process.env.PASSWORD ,
+    database:process.env.DATABASE ,
 };
 
 const sequelize = new Sequelize(dbConfig);
@@ -19,4 +19,10 @@ sequelize.authenticate()
         console.error('Verbindung zur Datenbank fehlgeschlagen:', err);
     });
 
-module.exports = sequelize;
+const generateRandomSecretKey = () => {
+    return crypto.randomBytes(32).toString('hex');
+};
+
+
+module.exports = { sequelize, };
+
