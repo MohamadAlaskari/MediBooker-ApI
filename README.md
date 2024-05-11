@@ -14,5 +14,5 @@ password: MediBooker4
 node sync-db.js
 
 
-generate fake data node fakedata.js
+generate fake data: node fakedata.js
 

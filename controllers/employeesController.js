@@ -1,5 +1,9 @@
 const Employee = require('../models/Employee');
 const bcrypt = require('bcrypt')
+const EmployeeToken = require('../models/EmployeeToken')
+const jwt = require('jsonwebtoken');
+
+const { jwtSecret, jwtExpiration } = require('../middlewares/tockenService');
 
 async function getAll(req, res) {
     try {
@@ -87,10 +91,16 @@ async function login(req, res) {
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Incorrect email or password!' });
         }
+        await employee.update({ active: true });
+        // Generate random token
+        const token = jwt.sign({}, jwtSecret, { expiresIn: jwtExpiration });
+
+        // Erstellen Sie das PatientToken-Objekt und übergeben Sie die patientId explizit
+        await EmployeeToken.create({ token, employeeId: employee.id });
 
         // Hier können Sie je nach Anforderung eine JWT-Authentifizierung implementieren
 
-        return res.status(200).json({ message: 'Login successful!', employee });
+        return res.status(200).json({ message: 'Login successful!', token });
     } catch (error) {
         console.error('Error logging in:', error);
         return res.status(500).json({ error: 'An error occurred while logging in!' });

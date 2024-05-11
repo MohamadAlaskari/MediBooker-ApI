@@ -2,6 +2,7 @@ const Faker = require('faker');
 const { sequelize } = require('./config/dbConfig');
 const Appointment = require('./models/Appointment');
 const Patient = require('./models/Patient');
+const Employee = require('./models/Employee');
 const Service = require('./models/Service');
 const Reservation = require('./models/Reservation');
 
@@ -29,7 +30,25 @@ const generatePatients = async () => {
     }
     return patients;
 };
-
+const generateEmployees = async () => {
+    // Generate 10 random employee
+    const employees = [];
+    for (let i = 0; i < 10; i++) {
+        const employee = await Employee.create({
+            name: Faker.name.findName(),
+            surname: Faker.name.lastName(),
+            email: Faker.internet.email(),
+            password: Faker.internet.password(),
+            street: Faker.address.streetName(),
+            hNr: Faker.random.number({ min: 1, max: 99 }),
+            postcode: Faker.address.zipCode(),
+            city: Faker.address.city(),
+            active: false,
+        });
+        employees.push(employee);
+    }
+    return employees;
+};
 const generateAppointments = async () => {
     const appointments = [];
     for (let i = 0; i < 10; i++) {
@@ -67,15 +86,16 @@ const generateReservations = async (appointments, patients, services) => {
 
 const generateData = async () => {
 
-    await sequelize.sync(); 
+    await sequelize.sync();
 
     const patients = await generatePatients();
+    const employee = await generateEmployees();
     const services = await generateServices();
     const appointments = await generateAppointments();
-    await generateReservations(appointments, patients, services);
+    await generateReservations(appointments, patients, employee, services);
 
     console.log('Data generation complete!');
-    process.exit(); 
+    process.exit();
 };
 
 generateData();
