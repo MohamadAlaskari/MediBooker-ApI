@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const appointmentController = require('../controllers/appointmentController');
+const { authenticateToken } = require('../middlewares/authenticateToken');
 
-router.get('/appointments', appointmentController.getAllAppointments);
 
-router.get('/appointment', appointmentController.getAppointmentById);
+router.get('/appointments', authenticateToken, appointmentController.getAllAppointments);
 
-router.post('/create', appointmentController.createAppointment);
+router.get('/getById', authenticateToken, appointmentController.getAppointmentById);
 
-router.put('/update', appointmentController.updateAppointment);
+router.post('/create', authenticateToken, appointmentController.createAppointment);
 
-router.delete('/delete', appointmentController.deleteAppointment);
+router.put('/update', authenticateToken, appointmentController.updateAppointment);
+
+router.delete('/delete', authenticateToken, appointmentController.deleteAppointment);
 
 module.exports = router;

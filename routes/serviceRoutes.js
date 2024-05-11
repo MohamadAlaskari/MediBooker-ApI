@@ -6,7 +6,7 @@ const { authenticateToken } = require('../middlewares/authenticateToken');
 
 router.get('/services', authenticateToken, serviceController.getAllServices);
 router.get('/getbyid', authenticateToken, serviceController.getServiceById);
-router.post('/add', authenticateToken, serviceController.addService);
+router.post('/create', authenticateToken, serviceController.addService);
 router.delete('/delete', authenticateToken, serviceController.deleteService);
 router.put('/update', serviceController.updateService);
 

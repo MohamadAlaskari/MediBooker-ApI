@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const PatientToken = require('../models/PatientToken')
 const EmployeeToken = require('../models/EmployeeToken')
-const { findPatientIdByToken } = require('../middlewares/authenticateToken');
 
 const { jwtSecret, jwtExpiration } = require('../middlewares/tockenService');
 
