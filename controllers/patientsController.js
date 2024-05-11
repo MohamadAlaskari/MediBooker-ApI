@@ -16,7 +16,7 @@ async function getAll(req, res) {
         // Find the patient ID using the token
         const employeeToken = await EmployeeToken.findOne({ where: { token } });
         if (!employeeToken) {
-            return res.status(404).json({ error: 'Patient not found!' });
+            return res.status(404).json({ error: 'employeeToken not found!' });
         }
 
         const patients = await Patient.findAll();
@@ -52,6 +52,7 @@ async function signup(req, res) {
 }
 
 
+
 async function deletePatient(req, res) {
     try {
         const { id } = req.query;
@@ -63,9 +64,8 @@ async function deletePatient(req, res) {
         const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
 
 
-
         if (!patientTokenId && !employeeTokenId) {
-            return res.status(404).json({ error: 'Patient jhfjhfjhgk found!' });
+            return res.status(404).json({ error: 'patientTokenId or employeeTokenId not found!' });
         }
 
 
@@ -86,20 +86,25 @@ async function deletePatient(req, res) {
 }
 async function updatePatient(req, res) {
     try {
-        const token = req.headers['authorization'].split(' ')[1]; // Extrahieren des Tokens aus dem Header
+        const { id } = req.query;
         const updates = req.body;
 
+        const token = req.headers['authorization'].split(' ')[1];
+
         // Find the patient ID using the token
-        const patientToken = await PatientToken.findOne({ where: { token } });
-        if (!patientToken) {
-            return res.status(404).json({ error: 'Patient not found!' });
+        const patientTokenId = await PatientToken.findOne({ where: { token } });
+        const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
+
+
+        if (!patientTokenId && !employeeTokenId) {
+            return res.status(404).json({ error: 'patientTokenId or employeeTokenId not found!' });
         }
 
         if (updates.password) {
             updates.password = await bcrypt.hash(updates.password, 10);
         }
 
-        const [updatedRowsCount] = await Patient.update(updates, { where: { id: patientToken.patientId } });
+        const [updatedRowsCount] = await Patient.update(updates, { where: { id: id } });
 
         if (updatedRowsCount === 0) {
             return res.status(404).json({ error: 'Patient not found!' });
@@ -149,7 +154,7 @@ async function logout(req, res) {
         // Find the patient ID using the token
         const patientToken = await PatientToken.findOne({ where: { token } });
         if (!patientToken) {
-            return res.status(404).json({ error: 'Patient not found!' });
+            return res.status(404).json({ error: 'patientToken not found!' });
         }
         const patient = await Patient.findOne({ where: { id: patientToken.patientId } });
         if (!patient) {
