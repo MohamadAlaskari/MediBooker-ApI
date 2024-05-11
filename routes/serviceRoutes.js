@@ -3,9 +3,9 @@ const router = express.Router();
 const serviceController = require('../controllers/serviceController');
 
 router.get('/services', serviceController.getAllServices);
-router.get('/services/:id', serviceController.getServiceById);
-router.post('/addservice', serviceController.addService);
-router.delete('/delete/:id', serviceController.deleteService);
-router.put('/updateservice/:id', serviceController.updateService);
+router.get('/getbyid', serviceController.getServiceById);
+router.post('/add', serviceController.addService);
+router.delete('/delete', serviceController.deleteService); // Änderung: Keine ID im Pfad
+router.put('/update', serviceController.updateService); // Änderung: Keine ID im Pfad
 
 module.exports = router;
