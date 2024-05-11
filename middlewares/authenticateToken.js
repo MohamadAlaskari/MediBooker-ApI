@@ -28,6 +28,7 @@ function authenticateToken(req, res, next) {
     });
 
 }
+
 async function findPatientIdByToken(token, res) {
     try {
         const patientToken = await PatientToken.findOne({ where: { token } });

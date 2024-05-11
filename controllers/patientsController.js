@@ -2,6 +2,7 @@ const Patient = require('../models/Patient');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const PatientToken = require('../models/PatientToken')
+const EmployeeToken = require('../models/EmployeeToken')
 const { findPatientIdByToken } = require('../middlewares/authenticateToken');
 
 const { jwtSecret, jwtExpiration } = require('../middlewares/tockenService');
@@ -10,6 +11,14 @@ const { jwtSecret, jwtExpiration } = require('../middlewares/tockenService');
 
 async function getAll(req, res) {
     try {
+        const token = req.headers['authorization'].split(' ')[1];
+
+        // Find the patient ID using the token
+        const employeeToken = await EmployeeToken.findOne({ where: { token } });
+        if (!employeeToken) {
+            return res.status(404).json({ error: 'Patient not found!' });
+        }
+
         const patients = await Patient.findAll();
         if (patients.length === 0) {
             return res.status(404).json({ error: 'Keine Patients gefunden!!' });;
@@ -21,6 +30,7 @@ async function getAll(req, res) {
         return res.status(500).json({ error: error.message || 'An error occurred while fetching data.' });
     }
 }
+
 async function signup(req, res) {
     try {
         const { name, surname, dob, email, password, phoneNr, healthInsurance, insuranceType, insuranceNr, street, hNr, postcode, city } = req.body;
@@ -44,17 +54,22 @@ async function signup(req, res) {
 
 async function deletePatient(req, res) {
     try {
+        const { id } = req.query;
+
         const token = req.headers['authorization'].split(' ')[1];
 
         // Find the patient ID using the token
-        const patientToken = await PatientToken.findOne({ where: { token } });
-        if (!patientToken) {
-            return res.status(404).json({ error: 'Patient not found!' }); 
+        const patientTokenId = await PatientToken.findOne({ where: { token } });
+        const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
+
+
+
+        if (!patientTokenId && !employeeTokenId) {
+            return res.status(404).json({ error: 'Patient jhfjhfjhgk found!' });
         }
-        
-        // Weiter mit der Patienten-ID wie zuvor
-        const { patientId } = patientToken;
-        const deletedPatient = await Patient.destroy({ where: { id: patientId } });
+
+
+        const deletedPatient = await Patient.destroy({ where: { id: id } });
 
         if (!deletedPatient) {
             return res.status(404).json({ error: 'Patient not found!' });
@@ -73,17 +88,17 @@ async function updatePatient(req, res) {
     try {
         const token = req.headers['authorization'].split(' ')[1]; // Extrahieren des Tokens aus dem Header
         const updates = req.body;
-        
+
         // Find the patient ID using the token
         const patientToken = await PatientToken.findOne({ where: { token } });
         if (!patientToken) {
-            return res.status(404).json({ error: 'Patient not found!' }); 
+            return res.status(404).json({ error: 'Patient not found!' });
         }
 
         if (updates.password) {
             updates.password = await bcrypt.hash(updates.password, 10);
         }
-        
+
         const [updatedRowsCount] = await Patient.update(updates, { where: { id: patientToken.patientId } });
 
         if (updatedRowsCount === 0) {
@@ -130,11 +145,11 @@ async function login(req, res) {
 async function logout(req, res) {
     try {
         const token = req.headers['authorization'].split(' ')[1];
-        
+
         // Find the patient ID using the token
         const patientToken = await PatientToken.findOne({ where: { token } });
         if (!patientToken) {
-            return res.status(404).json({ error: 'Patient not found!' }); 
+            return res.status(404).json({ error: 'Patient not found!' });
         }
         const patient = await Patient.findOne({ where: { id: patientToken.patientId } });
         if (!patient) {
