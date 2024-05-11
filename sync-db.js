@@ -8,7 +8,8 @@ const Employee = require('./models/Employee');
 const Rservation = require('./models/Reservation');
 (async () => {
   try {
-    // Lösche die Tabellen und erstelle sie neu
+
+
     await Patient.sync({ force: true });
     await Employee.sync({ force: true });
     await PatientToken.sync({ force: true });
@@ -16,6 +17,7 @@ const Rservation = require('./models/Reservation');
     await Service.sync({ force: true });
     await Appointment.sync({ force: true });
     await Rservation.sync({ force: true });
+
 
     console.log('Datenbank synchronisiert.');
     process.exit(0); // Beende den Prozess nach erfolgreicher Synchronisierung
