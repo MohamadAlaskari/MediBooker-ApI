@@ -35,7 +35,7 @@ async function findPatientIdByToken(token, res) {
         if (!patientToken) {
             return res.status(404).json({ error: 'Patient not found!' });
         }
-        return res.status(200).json({ message: 'token found successful!', patientId: patientToken.patientId });;
+        return res.status(200).json({ message: 'token found successful!', patientId: patientToken.patientId });
     } catch (error) {
         console.error('Error finding patient ID by token:', error);
         return res.status(500).json({ error: 'An error occurred while finding patient ID by token!' });
