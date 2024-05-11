@@ -8,15 +8,16 @@ const Employee = require('./models/Employee');
 const Rservation = require('./models/Reservation');
 (async () => {
   try {
-    // Synchronisiere die Tabellen, ohne sie zu löschen und neu zu erstellen
 
-    await Patient.sync();
-    await PatientToken.sync();
-    await Service.sync();
-    await Appointment.sync();
-    await Employee.sync();
-    await EmployeeToken.sync();
-    await Rservation.sync();
+
+    await Patient.sync({ force: true });
+    await Employee.sync({ force: true });
+    await PatientToken.sync({ force: true });
+    await EmployeeToken.sync({ force: true });
+    await Service.sync({ force: true });
+    await Appointment.sync({ force: true });
+    await Rservation.sync({ force: true });
+
 
     console.log('Datenbank synchronisiert.');
     process.exit(0); // Beende den Prozess nach erfolgreicher Synchronisierung
@@ -25,5 +26,6 @@ const Rservation = require('./models/Reservation');
     process.exit(1); // Beende den Prozess mit Fehlercode
   }
 })();
+
 
 

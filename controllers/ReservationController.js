@@ -1,7 +1,22 @@
 const Reservation = require('../models/Reservation');
+const EmployeeToken = require('../models/EmployeeToken')
+const PatientToken = require('../models/PatientToken')
+const Appointment = require('../models/Appointment')
+
+
 
 async function getAll(req, res) {
     try {
+
+        const token = req.headers['authorization'].split(' ')[1];
+
+        // Find the patient ID using the token
+        const employeeToken = await EmployeeToken.findOne({ where: { token } });
+        if (!employeeToken) {
+            return res.status(404).json({ error: 'employeeToken not found!' });
+        }
+
+
         const reservations = await Reservation.findAll();
         if (reservations.length === 0) {
             return res.status(404).json({ error: 'No reservations found!' });
@@ -15,6 +30,22 @@ async function getAll(req, res) {
 
 async function create(req, res) {
     try {
+        const token = req.headers['authorization'].split(' ')[1];
+
+        // Find the patient ID using the token
+        const patientTokenId = await PatientToken.findOne({ where: { token } });
+        const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
+
+        if (!patientTokenId && !employeeTokenId) {
+            return res.status(404).json({ error: 'patientTokenId or employeeTokenId not found!' });
+        }
+        const { appointmentId } = req.body;
+        const appointment = await Appointment.findOne({ where: { id: appointmentId } });
+
+        if (appointment.status) {
+            return res.status(404).json({ error: 'the Appointment is alredy booked!' });
+        }
+        await appointment.update({ status: true });
         const newReservation = await Reservation.create(req.body);
         return res.status(201).json(newReservation);
     } catch (error) {
@@ -25,39 +56,66 @@ async function create(req, res) {
 
 async function update(req, res) {
     try {
-        const { id, appointmentId, patientId, serviceId, ...updates } = req.body;
+        const { id } = req.query;
+        const { appointmentId, patientId, serviceId, ...updates } = req.body;
 
-        // Handle updates to associated models if foreign keys are provided
-        if (appointmentId || patientId || serviceId) {
-            // Check if foreign key fields are provided and update associated models if necessary
-            // For example, you might need to update the associated appointment, patient, or service here
-            if (appointmentId) {
-                await Appointment.update(updates, { where: { id: appointmentId } });
-            }
-            if (patientId) {
-                await Patient.update(updates, { where: { id: patientId } });
-            }
-            if (serviceId) {
-                await Service.update(updates, { where: { id: serviceId } });
-            }
+        // Überprüfen, ob alle erforderlichen Felder vorhanden sind
+        if (!id || !appointmentId || !patientId || !serviceId) {
+            return res.status(400).json({ error: 'Missing required fields!' });
         }
 
-        const [updatedRowsCount] = await Reservation.update(updates, { where: { id } });
-
-        if (updatedRowsCount === 0) {
+        // Überprüfen, ob die Reservation existiert
+        const existingReservation = await Reservation.findOne({ where: { id } });
+        if (!existingReservation) {
             return res.status(404).json({ error: 'Reservation not found!' });
         }
 
-        return res.status(200).json({ message: 'Reservation updated successfully!' });
+
+        // Aktualisieren des Appointment-Status auf false
+        const existingAppointment = await Appointment.findOne({ where: { id: existingReservation.appointmentId } });
+        if (!existingAppointment) {
+            return res.status(404).json({ error: 'Associated appointment not found!' });
+        }
+        // Löschen der alten Reservation
+        await existingAppointment.update({ status: false });
+        await existingReservation.destroy();
+
+
+        // Erstellen einer neuen Reservation
+        const newReservation = await Reservation.create({
+            appointmentId,
+            patientId,
+            serviceId,
+            ...updates
+        });
+        const appointment = await Appointment.findOne({ where: { id: appointmentId } });
+
+        if (appointment.status) {
+            return res.status(404).json({ error: 'the Appointment is alredy booked!' });
+        }
+        await appointment.update({ status: true });
+
+        return res.status(200).json({ message: 'Reservation updated successfully!', newReservation });
     } catch (error) {
         console.error('Error updating reservation:', error);
         return res.status(500).json({ error: 'An error occurred while updating reservation!' });
     }
 }
 
+
 async function remove(req, res) {
     try {
-        const { id } = req.body;
+        const { id } = req.query;
+        const token = req.headers['authorization'].split(' ')[1];
+
+        // Find the patient ID using the token
+        const patientTokenId = await PatientToken.findOne({ where: { token } });
+        const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
+
+
+        if (!patientTokenId && !employeeTokenId) {
+            return res.status(404).json({ error: 'patientTokenId or employeeTokenId not found!' });
+        }
         const deletedRowCount = await Reservation.destroy({ where: { id } });
         if (deletedRowCount === 0) {
             return res.status(404).json({ error: 'Reservation not found!' });
