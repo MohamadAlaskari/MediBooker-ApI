@@ -122,7 +122,6 @@ async function login(req, res) {
         const { email, password } = req.body;
 
         const patient = await Patient.findOne({ where: { email } });
-        //console.log(patient)
         if (!patient) {
             return res.status(401).json({ error: 'Incorrect email or password!' });
         }
@@ -133,11 +132,13 @@ async function login(req, res) {
             return res.status(401).json({ error: 'Incorrect email or password!' });
         }
         await patient.update({ active: true });
+
         // Generate random token
         const token = jwt.sign({}, jwtSecret, { expiresIn: jwtExpiration });
 
-        // Erstellen Sie das PatientToken-Objekt und übergeben Sie die patientId explizit
         await PatientToken.create({ token, patientId: patient.id });
+
+       setTimeout(() => deleteExpiredToken(token), 60 * 60 * 1000); //60 min
 
         return res.status(200).json({ message: 'Login successful!', token });
     } catch (error) {
@@ -145,6 +146,15 @@ async function login(req, res) {
         return res.status(500).json({ error: 'An error occurred while logging in!' });
     }
 }
+
+async function deleteExpiredToken(token) {
+    try {
+        await PatientToken.destroy({ where: { token } });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 
 async function logout(req, res) {
     try {
@@ -165,7 +175,7 @@ async function logout(req, res) {
 
         return res.status(200).json({ message: 'Logout successful!' });
     } catch (error) {
-        console.error('Error logging out:', error);
+        console.error('Error  logging out:', error);
         return res.status(500).json({ error: 'An error occurred while logging out!' });
     }
 }
