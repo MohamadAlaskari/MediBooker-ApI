@@ -9,7 +9,7 @@
     "rewrites": [
         {
             "source": "/(.*)",
-            "destination": "/MediBooker-ApI"
+            "destination": "/index.js"
         }
     ]
 }
