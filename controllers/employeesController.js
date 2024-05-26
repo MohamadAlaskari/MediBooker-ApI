@@ -124,15 +124,23 @@ async function login(req, res) {
         // Generate random token
         const token = jwt.sign({}, jwtSecret, { expiresIn: jwtExpiration });
 
-        // Erstellen Sie das PatientToken-Objekt und übergeben Sie die patientId explizit
         await EmployeeToken.create({ token, employeeId: employee.id });
 
-        // Hier können Sie je nach Anforderung eine JWT-Authentifizierung implementieren
+        setTimeout(() => deleteExpiredToken(token), 60 * 60 * 1000); //60 min
+
 
         return res.status(200).json({ message: 'Login successful!', token });
     } catch (error) {
         console.error('Error logging in:', error);
         return res.status(500).json({ error: 'An error occurred while logging in!' });
+    }
+}
+async function deleteExpiredToken(token) {
+    try {
+        await EmployeeToken.destroy({ where: { token } });
+    
+    } catch (error) {
+        console.error(error);
     }
 }
 
