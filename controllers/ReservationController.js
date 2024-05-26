@@ -2,7 +2,7 @@ const Reservation = require('../models/Reservation');
 const EmployeeToken = require('../models/EmployeeToken')
 const PatientToken = require('../models/PatientToken')
 const Appointment = require('../models/Appointment')
-
+const { Op } = require('sequelize');
 
 
 async function getAll(req, res) {
@@ -32,27 +32,62 @@ async function create(req, res) {
     try {
         const token = req.headers['authorization'].split(' ')[1];
 
-        // Find the patient ID using the token
+        // Validate token
         const patientTokenId = await PatientToken.findOne({ where: { token } });
         const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
 
         if (!patientTokenId && !employeeTokenId) {
-            return res.status(404).json({ error: 'patientTokenId or employeeTokenId not found!' });
+            return res.status(404).json({ error: 'Patient or Employee token not found!' });
         }
-        const { appointmentId } = req.body;
+
+        const { patientId, appointmentId, serviceId } = req.body;
+
+        if (!patientId || !appointmentId || !serviceId) {
+            return res.status(400).json({ error: 'patientId, appointmentId, and serviceId are required.' });
+        }
+
+        // Finde die zukünftigen Reservierungen des Patienten
+        const futureReservations = await Reservation.findAll({
+            where: {
+                patientId: patientId
+            },
+            include: [{
+                model: Appointment,
+                where: {
+                    date: {
+                        [Op.gt]: new Date() // Nur zukünftige Termine
+                    }
+                },
+                required: true
+            }]
+        });
+
+        // Überprüfe, ob der Patient bereits zwei oder mehr zukünftige Reservierungen hat
+        if (futureReservations.length >= 2) {
+            return res.status(400).json({ message: 'Patient darf nicht mehr als zwei zukünftige Termine haben.' });
+        }
+
         const appointment = await Appointment.findOne({ where: { id: appointmentId } });
 
         if (appointment.status) {
-            return res.status(404).json({ error: 'the Appointment is alredy booked!' });
+            return res.status(404).json({ error: 'The appointment is already booked!' });
         }
+
+        // Erstelle die neue Reservierung
         await appointment.update({ status: true });
-        const newReservation = await Reservation.create(req.body);
+        const newReservation = await Reservation.create({
+            patientId: patientId,
+            appointmentId: appointmentId,
+            serviceId: serviceId
+        });
+
         return res.status(201).json(newReservation);
     } catch (error) {
         console.error('Error creating reservation:', error);
         return res.status(500).json({ error: 'An error occurred while creating reservation!' });
     }
 }
+
 
 async function update(req, res) {
     try {
