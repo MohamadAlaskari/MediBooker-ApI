@@ -181,6 +181,52 @@ async function logout(req, res) {
 }
 
 
+async function getPatientByToken(req, res) {
+    try {
+        const token = req.headers['authorization'].split(' ')[1];
+
+        // Find the patient ID using the token
+        const patientToken = await PatientToken.findOne({ where: { token } });
+        if (!patientToken) {
+            return res.status(404).json({ error: 'Patient token not found!' });
+        }
+
+        const patient = await Patient.findOne({ where: { id: patientToken.patientId } });
+        if (!patient) {
+            return res.status(404).json({ error: 'Patient not found!' });
+        }
+
+        return res.status(200).json(patient);
+    } catch (error) {
+        console.error('Error fetching patient by token:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching the patient by token!' });
+    }
+}
+
+async function getPatientById(req, res) {
+    try {
+        const token = req.headers['authorization'].split(' ')[1];
+
+        // Check if the token is valid
+        const patientToken = await PatientToken.findOne({ where: { token } });
+        const employeeToken = await EmployeeToken.findOne({ where: { token } });
+        if (!patientToken && !employeeToken) {
+            return res.status(403).json({ error: 'Invalid token!' });
+        }
+
+        const { id } = req.query;
+        const patient = await Patient.findOne({ where: { id } });
+        if (!patient) {
+            return res.status(404).json({ error: 'Patient not found!' });
+        }
+
+        return res.status(200).json(patient);
+    } catch (error) {
+        console.error('Error fetching patient by ID:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching the patient by ID!' });
+    }
+}
+
 
 
 
@@ -191,5 +237,7 @@ module.exports = {
     deletePatient,
     updatePatient,
     login,
-    logout
+    logout,
+    getPatientByToken,
+    getPatientById
 }

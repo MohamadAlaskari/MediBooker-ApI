@@ -169,11 +169,58 @@ async function logout(req, res) {
 }
 
 
+async function getEmployeeByToken(req, res) {
+    try {
+        const token = req.headers['authorization'].split(' ')[1];
+
+        const employeeToken = await EmployeeToken.findOne({ where: { token } });
+        if (!employeeToken) {
+            return res.status(404).json({ error: 'Employee token not found!' });
+        }
+
+        const employee = await Employee.findOne({ where: { id: employeeToken.employeeId } });
+        if (!employee) {
+            return res.status(404).json({ error: 'Employee not found!' });
+        }
+
+        return res.status(200).json(employee);
+    } catch (error) {
+        console.error('Error fetching employee by token:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching the employee by token!' });
+    }
+}
+
+async function getEmployeeById(req, res) {
+    try {
+        const token = req.headers['authorization'].split(' ')[1];
+
+        // Check if the token is valid
+        const employeeToken = await EmployeeToken.findOne({ where: { token } });
+        if (!employeeToken) {
+            return res.status(403).json({ error: 'Invalid token!' });
+        }
+
+        const { id } = req.query;
+        const employee = await Employee.findOne({ where: { id } });
+        if (!employee) {
+            return res.status(404).json({ error: 'Employee not found!' });
+        }
+
+        return res.status(200).json(employee);
+    } catch (error) {
+        console.error('Error fetching employee by ID:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching the employee by ID!' });
+    }
+}
+
+
 module.exports = {
     getAll,
     signup,
     deleteEmployee,
     updateEmployee,
     login,
-    logout
+    logout,
+    getEmployeeById,
+    getEmployeeByToken
 }

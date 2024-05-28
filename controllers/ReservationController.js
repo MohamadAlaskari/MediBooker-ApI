@@ -162,9 +162,41 @@ async function remove(req, res) {
     }
 }
 
+async function getPatientAppointments(req, res) {
+    try {
+        const token = req.headers['authorization'].split(' ')[1];
+
+        const patientToken = await PatientToken.findOne({ where: { token } });
+        const employeeToken = await EmployeeToken.findOne({ where: { token } });
+        if (!patientToken && !employeeToken) {
+            return res.status(403).json({ error: 'Invalid token!' });
+        }
+
+        const { patientId } = req.query;  // Stellen Sie sicher, dass der Query-Parameter patientId ist
+        if (!patientId) {
+            return res.status(400).json({ error: 'patientId query parameter is required' });
+        }
+
+        const reservations = await Reservation.findAll({
+            where: { patientId },
+            include: [Appointment]
+        });
+        if (reservations.length === 0) {
+            return res.status(404).json({ error: 'No appointments found for this patient!' });
+        }
+
+        return res.status(200).json(reservations);
+    } catch (error) {
+        console.error('Error fetching patient appointments:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching patient appointments!' });
+    }
+}
+
+
 module.exports = {
     getAll,
     create,
     update,
-    remove
+    remove,
+    getPatientAppointments
 };
