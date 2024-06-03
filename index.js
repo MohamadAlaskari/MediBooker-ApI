@@ -1,6 +1,12 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
+const http = require('http');
+const { initializeWebSocketServer } = require('./services/websocketServer');
+
+
+const app = express();
+const server = http.createServer(app);
+
 
 // Hier wird CORS für alle Domains erlaubt
 app.use(cors());
@@ -30,6 +36,10 @@ app.use('/appointment', appointmentRoutes);
 app.use('/employee', employeesRoutes);
 app.use('/reservation', reservationRoutes);
 
+
+
+// Initialize WebSocket server
+initializeWebSocketServer(server);
 
 const port = 3000;
 try {
