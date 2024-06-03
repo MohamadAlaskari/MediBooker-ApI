@@ -172,14 +172,15 @@ async function getPatientAppointments(req, res) {
             return res.status(403).json({ error: 'Invalid token!' });
         }
 
-        const { patientId } = req.query;  // Stellen Sie sicher, dass der Query-Parameter patientId ist
+
+        patientId = patientToken.patientId;  // Stellen Sie sicher, dass der Query-Parameter patientId ist
         if (!patientId) {
             return res.status(400).json({ error: 'patientId query parameter is required' });
         }
 
         const reservations = await Reservation.findAll({
             where: { patientId },
-            include: [Appointment]
+            include: [Appointment, Service]
         });
         if (reservations.length === 0) {
             return res.status(404).json({ error: 'No appointments found for this patient!' });

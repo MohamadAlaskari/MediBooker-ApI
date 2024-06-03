@@ -1054,11 +1054,6 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
-          },
-          {
-            "name": "where",
-            "in": "query",
-            "type": "string"
           }
         ],
         "responses": {
