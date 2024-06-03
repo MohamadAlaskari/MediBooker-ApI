@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
-const { initializeWebSocketServer } = require('./services/websocketServer');
+const { initializeWebSocketServer } = require('./services/websocketService');
 
 
 const app = express();
