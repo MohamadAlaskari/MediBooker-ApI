@@ -1,3 +1,6 @@
+// nicht mehr verwendet, ich habe es modular gemacht 
+
+/*
 const socketIo = require('socket.io');
 
 function initializeWebSocketServer(server) {
@@ -31,3 +34,4 @@ function notifyClients(event, data) {
 }
 
 module.exports = { initializeWebSocketServer };
+*/

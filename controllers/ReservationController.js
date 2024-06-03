@@ -4,11 +4,11 @@ const PatientToken = require('../models/PatientToken')
 const Appointment = require('../models/Appointment')
 const Service = require('../models/Service')
 const { Op } = require('sequelize');
-const { notifyClients } = require('../services/websocketService');
+const { notifyClients } = require('../services/websockets/websocketNotify');
 
 
 
-async function getAll(req, res) {
+async function getAll(req, res, next) {
     try {
 
         const token = req.headers['authorization'].split(' ')[1];
@@ -28,12 +28,13 @@ async function getAll(req, res) {
         notifyClients('reservationsUpdated', reservations);
         return res.status(200).json(reservations);
     } catch (error) {
-        console.error('Error fetching reservations:', error);
-        return res.status(500).json({ error: 'An error occurred while fetching reservations!' });
+        next(error); // Fehler an die Middleware weitergeben
+        // console.error('Error fetching reservations:', error);
+        // return res.status(500).json({ error: 'An error occurred while fetching reservations!' });
     }
 }
 
-async function create(req, res) {
+async function create(req, res, next) {
     try {
         const token = req.headers['authorization'].split(' ')[1];
 
@@ -89,13 +90,14 @@ async function create(req, res) {
         notifyClients('reservationUpdated', newReservation);
         return res.status(201).json({ message: 'Reservation updated successfully!', newReservation });
     } catch (error) {
-        console.error('Error creating reservation:', error);
-        return res.status(500).json({ error: 'An error occurred while creating reservation!' });
+        next(error); // Fehler an die Middleware weitergeben
+        // console.error('Error creating reservation:', error);
+        // return res.status(500).json({ error: 'An error occurred while creating reservation!' });
     }
 }
 
 
-async function update(req, res) {
+async function update(req, res, next) {
     try {
         const { id } = req.query;
         const { appointmentId, patientId, serviceId, ...updates } = req.body;
@@ -139,13 +141,14 @@ async function update(req, res) {
         notifyClients('reservationUpdated', newReservation);
         return res.status(200).json({ message: 'Reservation updated successfully!', newReservation });
     } catch (error) {
-        console.error('Error updating reservation:', error);
-        return res.status(500).json({ error: 'An error occurred while updating reservation!' });
+        next(error); // Fehler an die Middleware weitergeben
+        //  console.error('Error updating reservation:', error);
+        //return res.status(500).json({ error: 'An error occurred while updating reservation!' });
     }
 }
 
 
-async function remove(req, res) {
+async function remove(req, res, next) {
     try {
         const { id } = req.query;
         const token = req.headers['authorization'].split(' ')[1];
@@ -164,12 +167,13 @@ async function remove(req, res) {
         }
         return res.status(200).json({ message: 'Reservation deleted successfully!' });
     } catch (error) {
+        next(error); // Fehler an die Middleware weitergeben
         console.error('Error deleting reservation:', error);
         return res.status(500).json({ error: 'An error occurred while deleting reservation!' });
     }
 }
 
-async function getPatientAppointments(req, res) {
+async function getPatientAppointments(req, res, next) {
     try {
         const token = req.headers['authorization'].split(' ')[1];
 
@@ -197,8 +201,9 @@ async function getPatientAppointments(req, res) {
         notifyClients('patientAppointmentsUpdated', reservations);
         return res.status(200).json(reservations);
     } catch (error) {
-        console.error('Error fetching patient appointments:', error);
-        return res.status(500).json({ error: 'An error occurred while fetching patient appointments!' });
+        next(error); // Fehler an die Middleware weitergeben
+        //  console.error('Error fetching patient appointments:', error);
+        //return res.status(500).json({ error: 'An error occurred while fetching patient appointments!' });
     }
 }
 

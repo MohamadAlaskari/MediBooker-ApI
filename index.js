@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
-const { initializeWebSocketServer } = require('./services/websocketService');
-
+const { initializeWebSocketServer } = require('./services/websockets/websocketInit');
+const { setIo } = require('./services/websockets/websocketNotify');
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 const server = http.createServer(app);
@@ -37,9 +38,13 @@ app.use('/employee', employeesRoutes);
 app.use('/reservation', reservationRoutes);
 
 
+// Fehler-Middleware als letzte Middleware in der Kette verwenden
+app.use(errorHandler);
 
 // Initialize WebSocket server
-initializeWebSocketServer(server);
+const io = initializeWebSocketServer(server);
+setIo(io);
+
 
 const port = 3000;
 try {
