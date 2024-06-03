@@ -4,7 +4,7 @@ const PatientToken = require('../models/PatientToken')
 const Appointment = require('../models/Appointment')
 const Service = require('../models/Service')
 const { Op } = require('sequelize');
-const { notifyClients } = require('../services/websocketService');
+const { notifyClients } = require('../services/websocketServer');
 
 
 
