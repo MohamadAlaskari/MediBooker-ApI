@@ -24,4 +24,10 @@ function initializeWebSocketServer(server) {
     return io;
 }
 
+function notifyClients(event, data) {
+    if (io) {
+        io.emit(event, data);
+    }
+}
+
 module.exports = { initializeWebSocketServer };

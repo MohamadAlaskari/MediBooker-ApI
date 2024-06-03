@@ -4,6 +4,8 @@ const PatientToken = require('../models/PatientToken')
 const Appointment = require('../models/Appointment')
 const Service = require('../models/Service')
 const { Op } = require('sequelize');
+const { notifyClients } = require('../services/websocketService');
+
 
 
 async function getAll(req, res) {
@@ -22,6 +24,8 @@ async function getAll(req, res) {
         if (reservations.length === 0) {
             return res.status(404).json({ error: 'No reservations found!' });
         }
+
+        notifyClients('reservationsUpdated', reservations);
         return res.status(200).json(reservations);
     } catch (error) {
         console.error('Error fetching reservations:', error);
@@ -82,7 +86,8 @@ async function create(req, res) {
             serviceId: serviceId
         });
 
-        return res.status(201).json(newReservation);
+        notifyClients('reservationUpdated', newReservation);
+        return res.status(201).json({ message: 'Reservation updated successfully!', newReservation });
     } catch (error) {
         console.error('Error creating reservation:', error);
         return res.status(500).json({ error: 'An error occurred while creating reservation!' });
@@ -131,6 +136,7 @@ async function update(req, res) {
         }
         await appointment.update({ status: true });
 
+        notifyClients('reservationUpdated', newReservation);
         return res.status(200).json({ message: 'Reservation updated successfully!', newReservation });
     } catch (error) {
         console.error('Error updating reservation:', error);
@@ -187,6 +193,8 @@ async function getPatientAppointments(req, res) {
             return res.status(404).json({ error: 'No appointments found for this patient!' });
         }
 
+
+        notifyClients('patientAppointmentsUpdated', reservations);
         return res.status(200).json(reservations);
     } catch (error) {
         console.error('Error fetching patient appointments:', error);
