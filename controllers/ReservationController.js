@@ -2,6 +2,7 @@ const Reservation = require('../models/Reservation');
 const EmployeeToken = require('../models/EmployeeToken')
 const PatientToken = require('../models/PatientToken')
 const Appointment = require('../models/Appointment')
+const Service = require('../models/Service')
 const { Op } = require('sequelize');
 
 
