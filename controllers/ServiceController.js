@@ -4,14 +4,6 @@ const EmployeeToken = require('../models/EmployeeToken')
 
 async function getAllServices(req, res) {
     try {
-        const token = req.headers['authorization'].split(' ')[1];
-
-        const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
-
-        if (!employeeTokenId) {
-            return res.status(404).json({ error: 'employeeTokenId not found!' });
-        }
-
         const services = await Service.findAll();
         if (services.length === 0) {
             return res.status(404).json({ error: 'Keine Dienste gefunden!' });
