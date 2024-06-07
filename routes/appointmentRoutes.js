@@ -14,4 +14,10 @@ router.put('/update', authenticateToken, appointmentController.updateAppointment
 
 router.delete('/delete', authenticateToken, appointmentController.deleteAppointment);
 
+router.get('/appointmentsByDate', authenticateToken, appointmentController.getAppointmentByDate);
+
+router.post('/createMultiple', authenticateToken, appointmentController.createMultipleAppointments);
+
+
+
 module.exports = router;
