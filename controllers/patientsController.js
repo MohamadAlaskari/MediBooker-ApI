@@ -85,12 +85,11 @@ async function deletePatient(req, res) {
 }
 async function updatePatient(req, res) {
     try {
-        const { id } = req.query;
         const updates = req.body;
 
         const token = req.headers['authorization'].split(' ')[1];
 
-        // Find the patient ID using the token
+      
         const patientTokenId = await PatientToken.findOne({ where: { token } });
         const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
 
@@ -103,7 +102,7 @@ async function updatePatient(req, res) {
             updates.password = await bcrypt.hash(updates.password, 10);
         }
 
-        const [updatedRowsCount] = await Patient.update(updates, { where: { id: id } });
+        const [updatedRowsCount] = await Patient.update(updates, { where: { id: patientTokenId.patientId } });
 
         if (updatedRowsCount === 0) {
             return res.status(404).json({ error: 'Patient not found!' });

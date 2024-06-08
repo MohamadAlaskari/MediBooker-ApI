@@ -45,8 +45,8 @@ async function create(req, res, next) {
         if (!patientTokenId && !employeeTokenId) {
             return res.status(404).json({ error: 'Patient or Employee token not found!' });
         }
-
-        const { patientId, appointmentId, serviceId } = req.body;
+        patientId =patientTokenId.patientId;
+        const {appointmentId, serviceId } = req.body;
 
         if (!patientId || !appointmentId || !serviceId) {
             return res.status(400).json({ error: 'patientId, appointmentId, and serviceId are required.' });
