@@ -46,9 +46,11 @@ const io = initializeWebSocketServer(server);
 setIo(io);
 
 
-const port = 3000;
+const port = 3001;
+module.exports = app;
 try {
     app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
 } catch (error) {
     console.error('Error occurred during database synchronization:', error);
 }
+
