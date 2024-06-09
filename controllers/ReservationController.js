@@ -1,3 +1,4 @@
+const { sequelize } = require('../config/dbConfig');
 const Reservation = require('../models/Reservation');
 const EmployeeToken = require('../models/EmployeeToken')
 const PatientToken = require('../models/PatientToken')
@@ -149,6 +150,7 @@ async function update(req, res, next) {
 
 
 async function remove(req, res, next) {
+    const transaction = await sequelize.transaction();
     try {
         const { id } = req.query;
         const token = req.headers['authorization'].split(' ')[1];
@@ -157,17 +159,34 @@ async function remove(req, res, next) {
         const patientTokenId = await PatientToken.findOne({ where: { token } });
         const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
 
-
         if (!patientTokenId && !employeeTokenId) {
+            await transaction.rollback();
             return res.status(404).json({ error: 'patientTokenId or employeeTokenId not found!' });
         }
-        const deletedRowCount = await Reservation.destroy({ where: { id } });
-        if (deletedRowCount === 0) {
+
+        // Find the reservation to get the appointmentId
+        const reservation = await Reservation.findOne({ where: { id } });
+        if (!reservation) {
+            await transaction.rollback();
             return res.status(404).json({ error: 'Reservation not found!' });
         }
+
+        const { appointmentId } = reservation;
+
+        // Delete the reservation
+        const deletedRowCount = await Reservation.destroy({ where: { id }, transaction });
+        if (deletedRowCount === 0) {
+            await transaction.rollback();
+            return res.status(404).json({ error: 'Reservation not found!' });
+        }
+
+        // Update the appointment status to false
+        await Appointment.update({ status: false }, { where: { id: appointmentId }, transaction });
+
+        await transaction.commit();
         return res.status(200).json({ message: 'Reservation deleted successfully!' });
     } catch (error) {
-        next(error); // Fehler an die Middleware weitergeben
+        await transaction.rollback();
         console.error('Error deleting reservation:', error);
         return res.status(500).json({ error: 'An error occurred while deleting reservation!' });
     }
