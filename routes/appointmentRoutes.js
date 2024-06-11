@@ -18,6 +18,7 @@ router.get('/appointmentsByDate', authenticateToken, appointmentController.getAp
 
 router.post('/createMultiple', authenticateToken, appointmentController.createMultipleAppointments);
 
+router.post('/createForDateRange', authenticateToken, appointmentController.createAppointmentsForDateRange);
 
 
 module.exports = router;

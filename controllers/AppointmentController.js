@@ -195,6 +195,56 @@ async function createMultipleAppointments(req, res) {
 }
 
 
+async function createAppointmentsForDateRange(req, res) {
+    try {
+        const { dateStart, dateEnd, min, start, end } = req.body;
+
+        const token = req.headers['authorization'].split(' ')[1];
+        const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
+
+        if (!employeeTokenId) {
+            return res.status(404).json({ error: 'employeeTokenId not found!' });
+        }
+
+        const createdAppointments = [];
+
+        const startDate = new Date(dateStart);
+        const endDate = new Date(dateEnd);
+
+        for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
+            const formattedDate = date.toISOString().split('T')[0];
+            const startTime = parseInt(start.split(':')[0]) * 60 + parseInt(start.split(':')[1]); // Startzeit in Minuten seit Mitternacht
+            const endTime = parseInt(end.split(':')[0]) * 60 + parseInt(end.split(':')[1]); // Endzeit in Minuten seit Mitternacht
+            const interval = parseInt(min); // Intervall in Minuten
+
+            for (let time = startTime; time <= endTime; time += interval) { 
+                const hour = Math.floor(time / 60).toString().padStart(2, '0'); // Stundenanteil berechnen und formatieren
+                const minutes = (time % 60).toString().padStart(2, '0'); // Minutenanteil berechnen und formatieren
+                const appointmentTime = `${hour}:${minutes}`;
+
+                const newAppointment = await Appointment.create({
+                    date: formattedDate,
+                    hour: appointmentTime,
+                    description: '',
+                    status: false,
+                });
+
+                createdAppointments.push(newAppointment);
+                
+                if (time + interval > endTime) { 
+                    break; // Schleife beenden, wenn der nächste Termin über die Endzeit hinausgehen würde
+                }
+            }
+        }
+
+        return res.status(201).json(createdAppointments);
+    } catch (error) {
+        console.error("Fehler beim Erstellen der Termine:", error);
+        return res.status(500).json({ error: 'Ein Fehler ist beim Erstellen der Termine aufgetreten.' });
+    }
+}
+
+
 module.exports = {
     getAllAppointments,
     getAppointmentById,
@@ -202,5 +252,6 @@ module.exports = {
     updateAppointment,
     deleteAppointment,
     getAppointmentByDate,
-    createMultipleAppointments
+    createMultipleAppointments,
+    createAppointmentsForDateRange
 };
