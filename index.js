@@ -8,7 +8,6 @@ const errorHandler = require('./middlewares/errorHandler');
 const app = express();
 const server = http.createServer(app);
 
-
 // Hier wird CORS für alle Domains erlaubt
 app.use(cors());
 
@@ -17,7 +16,6 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger-output.json');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
 
 // Routes
 const patientsRoutes = require('./routes/patientsRoutes');
@@ -37,7 +35,6 @@ app.use('/appointment', appointmentRoutes);
 app.use('/employee', employeesRoutes);
 app.use('/reservation', reservationRoutes);
 
-
 // Fehler-Middleware als letzte Middleware in der Kette verwenden
 app.use(errorHandler);
 
@@ -45,12 +42,5 @@ app.use(errorHandler);
 const io = initializeWebSocketServer(server);
 setIo(io);
 
-
-const port = 3001;
-module.exports = app;
-try {
-    app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
-} catch (error) {
-    console.error('Error occurred during database synchronization:', error);
-}
-
+// Export the express app as a serverless function
+module.exports = server;

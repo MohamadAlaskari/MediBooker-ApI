@@ -21,7 +21,6 @@
     "keywords": [
         "termin"
     ],
-    
     "author": "Mohamad Alaskari, Sudki koulak, Omar Zyiada, Oussama",
     "license": "ISC",
     "bugs": {
@@ -39,6 +38,7 @@
         "nodemon": "^3.1.0",
         "sequelize": "^6.37.3",
         "socket.io": "^4.7.5",
+        "http": "0.0.1-security",
         "swagger-ui-express": "^5.0.0"
     },
     "devDependencies": {
