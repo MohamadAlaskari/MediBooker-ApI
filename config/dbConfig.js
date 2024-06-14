@@ -1,9 +1,11 @@
 const { Sequelize } = require('sequelize');
+const mysql2 = require('mysql2');
+const crypto = require('crypto'); // falls es verwendet wird
 
 const dbConfig = {
     dialect: 'mysql',
     host: 'srv972.hstgr.io', // Use the environment variable for host
-    dialectModule: require('mysql2'),
+    dialectModule: mysql2,
     username: 'u252525807_Admin',
     password: 'MediBooker4',
     database: 'u252525807_T_verwaltung'
@@ -24,6 +26,4 @@ const generateRandomSecretKey = () => {
     return crypto.randomBytes(32).toString('hex');
 };
 
-
-module.exports = { sequelize, };
-
+module.exports = { sequelize };
