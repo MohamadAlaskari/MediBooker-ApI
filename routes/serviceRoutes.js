@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const serviceController = require('../controllers/serviceController');
+const serviceController = require('../controllers/ServiceController');
+const { authenticateToken } = require('../middlewares/authenticateToken');
+
 
 router.get('/services', serviceController.getAllServices);
-router.get('/services/:id', serviceController.getServiceById);
-router.post('/addservice', serviceController.addService);
-router.delete('/delete/:id', serviceController.deleteService);
-router.put('/updateservice/:id', serviceController.updateService);
+router.get('/getbyid', authenticateToken, serviceController.getServiceById);
+router.post('/create', authenticateToken, serviceController.addService);
+router.delete('/delete', authenticateToken, serviceController.deleteService);
+router.put('/update', serviceController.updateService);
 
 module.exports = router;

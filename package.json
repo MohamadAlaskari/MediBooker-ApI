@@ -5,15 +5,14 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-
-        "start": "env-cmd -f dev.env nodemon index.js",
-
-
-        "mysql": "nodemon test.js",
-        
-
-        "dbInit": "node sync-db.js"
-
+        "start": "node index.js",
+        "dev": "env-cmd -f dev.env nodemon index.js",
+        "build": "echo 'Build complete'",
+        "swagger": "node swagger.js",
+        "dropDB": "node drop-db.js",
+        "syncDB": "node sync-db.js",
+        "genFakedata": "node fakedata.js",
+        "mysql": "nodemon test.js"
     },
     "repository": {
         "type": "git",
@@ -22,6 +21,7 @@
     "keywords": [
         "termin"
     ],
+    
     "author": "Mohamad Alaskari, Sudki koulak, Omar Zyiada, Oussama",
     "license": "ISC",
     "bugs": {
@@ -37,6 +37,11 @@
         "jsonwebtoken": "^9.0.2",
         "mysql2": "^3.9.7",
         "nodemon": "^3.1.0",
-        "sequelize": "^6.37.3"
+        "sequelize": "^6.37.3",
+        "socket.io": "^4.7.5",
+        "swagger-ui-express": "^5.0.0"
+    },
+    "devDependencies": {
+        "swagger-autogen": "^2.23.7"
     }
 }

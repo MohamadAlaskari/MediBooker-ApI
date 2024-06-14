@@ -1,5 +1,6 @@
 const Service = require('../models/Service');
 const bcrypt = require('bcrypt');
+const EmployeeToken = require('../models/EmployeeToken')
 
 async function getAllServices(req, res) {
     try {
@@ -16,6 +17,13 @@ async function getAllServices(req, res) {
 
 async function addService(req, res) {
     try {
+        const token = req.headers['authorization'].split(' ')[1];
+        const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
+
+        if (!employeeTokenId) {
+            return res.status(404).json({ error: 'employeeTokenId not found!' });
+        }
+
         const { type, description } = req.body;
         await Service.create({ type, description });
         return res.status(201).json({ message: 'Dienst erfolgreich hinzugefügt!' });
@@ -27,8 +35,16 @@ async function addService(req, res) {
 
 async function updateService(req, res) {
     try {
-        const { id } = req.params;
+        const { id } = req.query; // Lesen der ID aus den Abfrageparametern
         const updates = req.body;
+
+        const token = req.headers['authorization'].split(' ')[1];
+        const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
+
+        if (!employeeTokenId) {
+            return res.status(404).json({ error: 'employeeTokenId not found!' });
+        }
+
         const [updatedRowsCount] = await Service.update(updates, { where: { id } });
         if (updatedRowsCount === 0) {
             return res.status(404).json({ error: 'Dienst nicht gefunden!' });
@@ -40,9 +56,23 @@ async function updateService(req, res) {
     }
 }
 
+
+
+
 async function deleteService(req, res) {
     try {
-        const { id } = req.params;
+        const { id } = req.query; // Lesen der ID aus den Abfrageparametern
+
+        const token = req.headers['authorization'].split(' ')[1];
+        const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
+
+        if (!employeeTokenId) {
+            return res.status(404).json({ error: 'employeeTokenId not found!' });
+        }
+
+        if (!id) {
+            return res.status(400).json({ error: 'Die ID wurde nicht bereitgestellt!' });
+        }
         const deletedRowsCount = await Service.destroy({ where: { id } });
         if (deletedRowsCount === 0) {
             return res.status(404).json({ error: 'Dienst nicht gefunden!' });
@@ -53,9 +83,18 @@ async function deleteService(req, res) {
         return res.status(500).json({ error: 'Ein Fehler ist beim Löschen des Dienstes aufgetreten!' });
     }
 }
+
 async function getServiceById(req, res) {
     try {
-        const { id } = req.params;
+        const { id } = req.query; // Änderung: Lesen der ID aus den Abfrageparametern
+
+        const token = req.headers['authorization'].split(' ')[1];
+        const employeeTokenId = await EmployeeToken.findOne({ where: { token } });
+
+        if (!employeeTokenId) {
+            return res.status(404).json({ error: 'employeeTokenId not found!' });
+        }
+
         const service = await Service.findByPk(id);
         if (!service) {
             return res.status(404).json({ error: 'Dienst nicht gefunden!' });
@@ -66,6 +105,9 @@ async function getServiceById(req, res) {
         return res.status(500).json({ error: 'Ein Fehler ist beim Abrufen des Dienstes aufgetreten!' });
     }
 }
+
+
+
 module.exports = {
     getAllServices,
     addService,

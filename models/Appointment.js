@@ -19,9 +19,10 @@ const Appointment = sequelize.define('Appointment', {
         type: DataTypes.TIME,
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING,
-        allowNull: false
+    status: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 
 },

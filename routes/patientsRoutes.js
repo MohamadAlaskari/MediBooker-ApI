@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
-//const { authenticateToken } = require('./middlewares/authenticateToken');
+const { authenticateToken } = require('../middlewares/authenticateToken');
 
-const { getAll, signup, deletePatient, updatePatient, login, logout } = require('../controllers/patientsController');
+const { getAll, signup, deletePatient, updatePatient, login, logout, getPatientByToken, getPatientById } = require('../controllers/patientsController');
 
-router.get("/patients", getAll);
-router.post("/signup", signup);
-router.delete("/delete", deletePatient);
-router.put("/update", updatePatient)
-router.post("/login", login);
-router.post("/logout", logout);
+router.post('/signup', signup);
+router.post('/login', login);
+router.post('/logout', authenticateToken, logout);
+router.get('/patients', authenticateToken, getAll);
+router.delete('/delete', authenticateToken, deletePatient);
+router.put('/update', authenticateToken, updatePatient);
+router.get('/by-token', authenticateToken, getPatientByToken);
+router.get('/by-id', authenticateToken, getPatientById);
 
 
 module.exports = router;
