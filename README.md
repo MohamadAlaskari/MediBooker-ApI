@@ -2,7 +2,7 @@
 
 ## Description
 
-Web-basierte App zur Verwaltung von Praxisterminen, ermöglicht Ärzten und medizinischem Personal das einfache Planen und Koordinieren von Patiententerminen.
+Web-basierte App zur Verwaltung von Praxisterminen, ermöglicht Ärzten und medizinischem Personal das einfache Planen und Koordinieren von Patiententerminen.  Eine ähnliche Implementierung kann unter [MediBooker API](https://medi-booker-ap-i.vercel.app/) eingesehen werden.
 
 Before using the MediBooker-API, ensure you have Node.js and npm installed.
 To set up the project, follow these steps:
@@ -17,15 +17,7 @@ npm start
 
 ## Database Management
 
-### phpMyAdmin Access
 
-Access the phpMyAdmin interface for database management at the following URL:
-https://auth-db972.hstgr.io/index.php?route=/sql&server=1&db=u252525807_T_verwaltung&table=Patient&pos=0
-
-Credentials:
-
-. username: u252525807_Admin
-. password: MediBooker4
 
 ## Database Operations
 
