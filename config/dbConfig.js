@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 
 const dbConfig = {
     dialect: 'mysql',
-    dialectModule:'mysql2',
+    dialectModule:require(('mysql2')),
     host: 'srv972.hstgr.io', // Use the environment variable for host
     username: 'u252525807_Admin',
     password: 'MediBooker4',
