@@ -2,7 +2,7 @@
 
 ## Description
 
-Web-basierte App zur Verwaltung von Praxisterminen, ermöglicht Ärzten und medizinischem Personal das einfache Planen und Koordinieren von Patiententerminen.  Eine ähnliche Implementierung kann unter [MediBooker API](https://medi-booker-ap-i.vercel.app/) eingesehen werden.
+Web-basierte App zur Verwaltung von Praxisterminen, ermöglicht Ärzten und medizinischem Personal das einfache Planen und Koordinieren von Patiententerminen. Eine ähnliche Implementierung kann unter [MediBooker API](https://medi-booker-ap-i.vercel.app/) eingesehen werden.
 
 Before using the MediBooker-API, ensure you have Node.js and npm installed.
 To set up the project, follow these steps:
@@ -17,7 +17,7 @@ npm start
 
 ## Database Management
 
-
+![alt text](DB.png)
 
 ## Database Operations
 
