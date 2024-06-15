@@ -46,7 +46,7 @@ const io = initializeWebSocketServer(server);
 setIo(io);
 
 
-const port = 3001;
+const port = process.env.PORT || 3000;
 // Export the app for Vercel
 module.exports = app;
 try {
