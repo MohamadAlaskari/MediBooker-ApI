@@ -47,6 +47,7 @@ setIo(io);
 
 
 const port = 3001;
+// Export the app for Vercel
 module.exports = app;
 try {
     app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
