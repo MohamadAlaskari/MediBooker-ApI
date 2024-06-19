@@ -8,6 +8,6 @@ router.post('/create', reservationController.create);
 router.put('/update', reservationController.update); // Using request body for update
 router.delete('/delete', reservationController.remove); // Using request body for delete
 router.get('/patient-appointments', authenticateToken, reservationController.getPatientAppointments);
-
+router.get('/reservationByAppointment/:appointmentId',authenticateToken, reservationController.getReservationByAppointmentId);
 
 module.exports = router;
