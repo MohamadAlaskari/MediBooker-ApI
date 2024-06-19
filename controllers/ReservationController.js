@@ -4,6 +4,7 @@ const EmployeeToken = require('../models/EmployeeToken')
 const PatientToken = require('../models/PatientToken')
 const Appointment = require('../models/Appointment')
 const Service = require('../models/Service')
+const Patient = require('../models/Patient')
 const { Op } = require('sequelize');
 const { notifyClients } = require('../services/websockets/websocketNotify');
 
@@ -225,12 +226,53 @@ async function getPatientAppointments(req, res, next) {
         //return res.status(500).json({ error: 'An error occurred while fetching patient appointments!' });
     }
 }
+async function getReservationByAppointmentId(req, res, next) {
+    try {
+        const token = req.headers['authorization']?.split(' ')[1];
 
+        if (!token) {
+            return res.status(403).json({ error: 'Authorization token missing!' });
+        }
+
+        let patientToken = await PatientToken.findOne({ where: { token } });
+        let employeeToken = await EmployeeToken.findOne({ where: { token } });
+
+        if (!patientToken && !employeeToken) {
+            return res.status(403).json({ error: 'Invalid token!' });
+        }
+
+        const { appointmentId } = req.params;
+
+        if (!appointmentId) {
+            return res.status(400).json({ error: 'Appointment ID is required!' });
+        }
+
+        const reservation = await Reservation.findOne({
+            where: {
+                appointmentId
+            },
+            include: [
+                { model: Patient },
+                { model: Appointment },
+                { model: Service }
+            ]
+        });
+
+        if (!reservation) {
+            return res.status(404).json({ error: 'Reservation not found for this appointment!' });
+        }
+
+        return res.status(200).json(reservation);
+    } catch (error) {
+        next(error); 
+    }
+}
 
 module.exports = {
     getAll,
     create,
     update,
     remove,
-    getPatientAppointments
+    getPatientAppointments,
+    getReservationByAppointmentId
 };
