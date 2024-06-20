@@ -267,12 +267,54 @@ async function getReservationByAppointmentId(req, res, next) {
         next(error); 
     }
 }
+async function getPatientAppointmentsById(req, res, next) {
+    try {
+        // Extract patientId from route parameters
+        const { patientId } = req.params;
+
+        // Check if patientId is provided
+        if (!patientId) {
+            return res.status(400).json({ error: 'patientId parameter is required' });
+        }
+
+        // Validate the authorization token
+        const token = req.headers['authorization'].split(' ')[1];
+        const patientToken = await PatientToken.findOne({ where: { token } });
+        const employeeToken = await EmployeeToken.findOne({ where: { token } });
+
+        if (!patientToken && !employeeToken) {
+            return res.status(403).json({ error: 'Invalid token!' });
+        }
+
+        // Fetch the reservations and include associated appointments and services
+        const reservations = await Reservation.findAll({
+            where: { patientId },
+            include: [Appointment, Service]
+        });
+
+        // Check if any reservations were found
+        if (reservations.length === 0) {
+            return res.status(404).json({ error: 'No appointments found for this patient!' });
+        }
+
+        // Notify clients about the updated patient appointments
+        notifyClients('patientAppointmentsUpdated', reservations);
+
+        // Return the reservations in the response
+        return res.status(200).json(reservations);
+    } catch (error) {
+        // Pass the error to the error handling middleware
+        next(error);
+    }
+}
+
 
 module.exports = {
     getAll,
     create,
     update,
     remove,
+    getPatientAppointmentsById,
     getPatientAppointments,
     getReservationByAppointmentId
 };
