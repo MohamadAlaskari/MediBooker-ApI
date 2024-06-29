@@ -9,7 +9,7 @@ const Service = sequelize.define('Service',
             autoIncrement: true
         },
         type: {
-            type: DataTypes.ENUM('Allergietests', 'Gesundheitsuntersuchung', 'Impfungen', 'Ultraschall', 'Röntgen', 'Chiropraktik', ''),
+            type: DataTypes.ENUM('Health Check-ups', 'X-rays', 'Vaccinations', 'Blood Tests', 'Allergy Testing', 'Ultrasound', ''),
             allowNull: false
         },
         description: {
