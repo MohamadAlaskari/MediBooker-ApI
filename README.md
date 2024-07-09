@@ -7,6 +7,8 @@ Web-basierte App zur Verwaltung von Praxisterminen, ermöglicht Ärzten und medi
 Before using the MediBooker-API, ensure you have Node.js and npm installed.
 To set up the project, follow these steps:
 
+https://auth-db972.hstgr.io/index.php?db=u252525807_T_verwaltung
+
 ### Install all dependencies:
 
 npm install
