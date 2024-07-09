@@ -2,6 +2,7 @@ const Employee = require('../models/Employee');
 const bcrypt = require('bcrypt')
 const EmployeeToken = require('../models/EmployeeToken')
 const jwt = require('jsonwebtoken');
+const { createWebSocketServer, broadcastMessage ,notifydeleteduser} = require('../middlewares/Socket.js');
 
 const { jwtSecret, jwtExpiration } = require('../middlewares/tockenService');
 
@@ -65,7 +66,7 @@ async function deleteEmployee(req, res) {
         if (!deletedEmployee) {
             return res.status(404).json({ error: 'Employee ient not found!' });
         }
-
+        notifydeleteduser();
         return res.status(200).json({ message: 'Employee deleted successfully!' });
     } catch (error) {
         console.error('Error deleting Employee:', error);
