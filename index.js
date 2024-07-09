@@ -50,7 +50,7 @@ const port = process.env.PORT || 3000;
 // Export the app for Vercel
 module.exports = app;
 try {
-    app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+    server.listen(port, () => console.log(`Server running on http://localhost:${port}`));
 } catch (error) {
     console.error('Error occurred during database synchronization:', error);
 }
