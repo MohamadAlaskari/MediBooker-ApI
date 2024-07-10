@@ -48,7 +48,10 @@ function notifserviceupdate() {
   const message = 'servicesarrayupdate'; 
   broadcastMessage(message);
 }
-
+function newReservationNotif(name, date, time) {
+  const message = `newreservation: New reservation for ${name} on ${date} at ${time}.`;
+  broadcastMessage(message);
+}
 
 function notifappointmentupdate() {
   console.log('Broadcasting message to all clients');
@@ -57,4 +60,4 @@ function notifappointmentupdate() {
 }
 
 
-module.exports = { createWebSocketServer, broadcastMessage, notifyemployeeupdate,notifserviceupdate,notifypatientupdate,notifappointmentupdate };
+module.exports = { createWebSocketServer, broadcastMessage, notifyemployeeupdate,notifserviceupdate,notifypatientupdate,notifappointmentupdate,newReservationNotif };

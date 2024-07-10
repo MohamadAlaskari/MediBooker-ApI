@@ -6,7 +6,7 @@ const Appointment = require('../models/Appointment')
 const Service = require('../models/Service')
 const Patient = require('../models/Patient')
 const { Op } = require('sequelize');
-const {notifappointmentupdate} = require('../middlewares/Socket.js');
+const {notifappointmentupdate,newReservationNotif} = require('../middlewares/Socket.js');
 
 
 
@@ -87,6 +87,8 @@ async function create(req, res, next) {
             appointmentId: appointmentId,
             serviceId: serviceId
         });
+        const patient = await Patient.findOne({ where: { id: patientId } });
+        newReservationNotif(patient.name, appointment.date.toDateString(), appointment.hour);
 
         notifappointmentupdate();
         return res.status(201).json({ message: 'Reservation updated successfully!', newReservation });
