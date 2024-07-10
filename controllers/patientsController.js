@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 const PatientToken = require('../models/PatientToken')
 const EmployeeToken = require('../models/EmployeeToken')
+const {notifypatientupdate} = require('../middlewares/Socket.js');
 
 const { jwtSecret, jwtExpiration } = require('../middlewares/tockenService');
 
@@ -39,7 +40,7 @@ async function signup(req, res) {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         await Patient.create({ name, surname, dob, email, password: hashedPassword, phoneNr, healthInsurance, insuranceType, insuranceNr, street, hNr, postcode, city });
-
+        notifypatientupdate();
         return res.status(201).json({ message: 'User registered successfully!' });
     } catch (error) {
         if (error.name === 'SequelizeUniqueConstraintError') {
@@ -76,7 +77,7 @@ async function deletePatient(req, res) {
 
         // Delete patient's token
         await PatientToken.destroy({ where: { token } });
-
+        notifypatientupdate();
         return res.status(200).json({ message: 'Patient deleted successfully!' });
     } catch (error) {
         console.error('Error deleting patient:', error);
@@ -107,7 +108,7 @@ async function updatePatient(req, res) {
         if (updatedRowsCount === 0) {
             return res.status(404).json({ error: 'Patient not found!' });
         }
-
+        notifypatientupdate();
         return res.status(200).json({ message: 'Patient updated successfully!' });
     } catch (error) {
         console.error('Error updating patient:', error);

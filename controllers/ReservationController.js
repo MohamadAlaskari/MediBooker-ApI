@@ -6,7 +6,7 @@ const Appointment = require('../models/Appointment')
 const Service = require('../models/Service')
 const Patient = require('../models/Patient')
 const { Op } = require('sequelize');
-const { notifyClients } = require('../services/websockets/websocketNotify');
+const {notifappointmentupdate} = require('../middlewares/Socket.js');
 
 
 
@@ -27,7 +27,6 @@ async function getAll(req, res, next) {
             return res.status(404).json({ error: 'No reservations found!' });
         }
 
-        notifyClients('reservationsUpdated', reservations);
         return res.status(200).json(reservations);
     } catch (error) {
         next(error); // Fehler an die Middleware weitergeben
@@ -89,7 +88,7 @@ async function create(req, res, next) {
             serviceId: serviceId
         });
 
-        notifyClients('reservationUpdated', newReservation);
+        notifappointmentupdate();
         return res.status(201).json({ message: 'Reservation updated successfully!', newReservation });
     } catch (error) {
         next(error); // Fehler an die Middleware weitergeben
@@ -140,7 +139,7 @@ async function update(req, res, next) {
         }
         await appointment.update({ status: true });
 
-        notifyClients('reservationUpdated', newReservation);
+        notifappointmentupdate();
         return res.status(200).json({ message: 'Reservation updated successfully!', newReservation });
     } catch (error) {
         next(error); // Fehler an die Middleware weitergeben
@@ -185,6 +184,7 @@ async function remove(req, res, next) {
         await Appointment.update({ status: false }, { where: { id: appointmentId }, transaction });
 
         await transaction.commit();
+        notifappointmentupdate();
         return res.status(200).json({ message: 'Reservation deleted successfully!' });
     } catch (error) {
         await transaction.rollback();
@@ -218,7 +218,6 @@ async function getPatientAppointments(req, res, next) {
         }
 
 
-        notifyClients('patientAppointmentsUpdated', reservations);
         return res.status(200).json(reservations);
     } catch (error) {
         next(error); // Fehler an die Middleware weitergeben
@@ -298,7 +297,6 @@ async function getPatientAppointmentsById(req, res, next) {
         }
 
         // Notify clients about the updated patient appointments
-        notifyClients('patientAppointmentsUpdated', reservations);
 
         // Return the reservations in the response
         return res.status(200).json(reservations);

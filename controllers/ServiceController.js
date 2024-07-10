@@ -1,6 +1,7 @@
 const Service = require('../models/Service');
 const bcrypt = require('bcrypt');
 const EmployeeToken = require('../models/EmployeeToken')
+const {notifserviceupdate} = require('../middlewares/Socket.js');
 
 async function getAllServices(req, res) {
     try {
@@ -26,6 +27,7 @@ async function addService(req, res) {
 
         const { type, description } = req.body;
         await Service.create({ type, description });
+        notifserviceupdate();
         return res.status(201).json({ message: 'Dienst erfolgreich hinzugefügt!' });
     } catch (error) {
         console.error('Error adding service:', error);
@@ -49,6 +51,7 @@ async function updateService(req, res) {
         if (updatedRowsCount === 0) {
             return res.status(404).json({ error: 'Dienst nicht gefunden!' });
         }
+        notifserviceupdate();
         return res.status(200).json({ message: 'Dienst erfolgreich aktualisiert!' });
     } catch (error) {
         console.error('Fehler beim Aktualisieren des Dienstes:', error);
@@ -77,6 +80,7 @@ async function deleteService(req, res) {
         if (deletedRowsCount === 0) {
             return res.status(404).json({ error: 'Dienst nicht gefunden!' });
         }
+        notifserviceupdate();
         return res.status(200).json({ message: 'Dienst erfolgreich gelöscht!' });
     } catch (error) {
         console.error('Fehler beim Löschen des Dienstes:', error);

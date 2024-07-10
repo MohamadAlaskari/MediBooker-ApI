@@ -2,7 +2,7 @@ const Employee = require('../models/Employee');
 const bcrypt = require('bcrypt')
 const EmployeeToken = require('../models/EmployeeToken')
 const jwt = require('jsonwebtoken');
-const { createWebSocketServer, broadcastMessage ,notifydeleteduser} = require('../middlewares/Socket.js');
+const {notifyemployeeupdate} = require('../middlewares/Socket.js');
 
 const { jwtSecret, jwtExpiration } = require('../middlewares/tockenService');
 
@@ -37,7 +37,7 @@ async function signup(req, res) {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         await Employee.create({ name, surname, email, password: hashedPassword, street, hNr, postcode, city });
-
+        notifyemployeeupdate();
         return res.status(201).json({ message: 'User registered successfully!' });
     } catch (error) {
         if (error.name === 'SequelizeUniqueConstraintError') {
@@ -66,7 +66,7 @@ async function deleteEmployee(req, res) {
         if (!deletedEmployee) {
             return res.status(404).json({ error: 'Employee ient not found!' });
         }
-        notifydeleteduser();
+        notifyemployeeupdate();
         return res.status(200).json({ message: 'Employee deleted successfully!' });
     } catch (error) {
         console.error('Error deleting Employee:', error);
@@ -98,7 +98,7 @@ async function updateEmployee(req, res) {
         if (updatedRowsCount === 0) {
             return res.status(404).json({ error: 'Employee not found!' });
         }
-
+        notifyemployeeupdate();
         return res.status(200).json({ message: 'Employee updated successfully!' });
     } catch (error) {
         console.error('Error updating Employee:', error);
