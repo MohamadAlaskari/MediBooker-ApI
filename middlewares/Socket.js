@@ -26,18 +26,38 @@ function createWebSocketServer(server) {
 }
 
 function broadcastMessage(message) {
-  const jsonMessage = JSON.stringify(message);
   clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
-      client.send(jsonMessage);
+      client.send(message);
     }
   });
 }
 
-function notifydeleteduser() {
-    console.log('Broadcasting message to all clients');
-    const message = JSON.stringify({ event: 'userdeleted' });
-    broadcastMessage(message);
-  }
+function notifyemployeeupdate() {
+  console.log('Broadcasting message to all clients');
+  const message = 'employeearrayupdate'; 
+  broadcastMessage(message);
+}
+function notifypatientupdate() {
+  console.log('Broadcasting message to all clients');
+  const message = 'patientarrayupdate'; 
+  broadcastMessage(message);
+}
+function notifserviceupdate() {
+  console.log('Broadcasting message to all clients');
+  const message = 'servicesarrayupdate'; 
+  broadcastMessage(message);
+}
+function newReservationNotif(name, date, time) {
+  const message = `newreservation: New reservation for ${name} on ${date} at ${time}.`;
+  broadcastMessage(message);
+}
 
-module.exports = { createWebSocketServer, broadcastMessage, notifydeleteduser };
+function notifappointmentupdate() {
+  console.log('Broadcasting message to all clients');
+  const message = 'appointmentsarrayupdate'; 
+  broadcastMessage(message);
+}
+
+
+module.exports = { createWebSocketServer, broadcastMessage, notifyemployeeupdate,notifserviceupdate,notifypatientupdate,notifappointmentupdate,newReservationNotif };

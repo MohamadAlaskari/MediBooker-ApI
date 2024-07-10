@@ -3,6 +3,7 @@ const { Op } = require('sequelize');
 const Appointment = require('../models/Appointment');
 const EmployeeToken = require('../models/EmployeeToken')
 const PatientToken = require('../models/PatientToken')
+const {notifappointmentupdate} = require('../middlewares/Socket.js');
 
 
 
@@ -63,6 +64,7 @@ async function createAppointment(req, res) {
 
         const { date, hour, description, status } = req.body;
         const appointment = await Appointment.create({ date, hour, description, status });
+        notifappointmentupdate();
         return res.status(201).json(appointment);
     } catch (error) {
         console.error("Fehler beim Erstellen des Termins:", error);
@@ -86,6 +88,7 @@ async function updateAppointment(req, res) {
         if (appointment === 0) {
             return res.status(404).json({ error: 'Termin nicht gefunden!' });
         }
+        notifappointmentupdate();
         return res.status(200).json({ message: 'appointment updated successfully' });
     } catch (error) {
         console.error("Fehler beim Aktualisieren des Termins:", error);
@@ -110,6 +113,7 @@ async function deleteAppointment(req, res) {
         if (!appointment) {
             return res.status(404).json({ error: 'Termin nicht gefunden!' });
         }
+        notifappointmentupdate();
         return res.status(200).json({ message: 'Termin erfolgreich gelöscht!' });
     } catch (error) {
         console.error("Fehler beim Löschen des Termins:", error);
@@ -186,7 +190,7 @@ async function createMultipleAppointments(req, res) {
                 }
             }
         }
-
+        notifappointmentupdate();
         return res.status(201).json(createdAppointments);
     } catch (error) {
         console.error("Fehler beim Erstellen der Termine:", error);
@@ -236,7 +240,7 @@ async function createAppointmentsForDateRange(req, res) {
                 }
             }
         }
-
+        notifappointmentupdate();
         return res.status(201).json(createdAppointments);
     } catch (error) {
         console.error("Fehler beim Erstellen der Termine:", error);
