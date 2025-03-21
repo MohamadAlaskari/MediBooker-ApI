@@ -1,12 +1,17 @@
-const { Sequelize } = require('sequelize');
-const crypto = require('crypto');
+import { Sequelize } from 'sequelize';
+import crypto from 'crypto';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+
 
 const dbConfig = {
     dialect: 'mysql',
     host: 'srv972.hstgr.io',
-    username: 'u252525807_Admin',
-    password: 'MediBooker4',
-    database: 'u252525807_T_verwaltung'
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
+
 };
 
 const sequelize = new Sequelize(dbConfig);
@@ -25,4 +30,4 @@ const generateRandomSecretKey = () => {
     return crypto.randomBytes(32).toString('hex');
 };
 
-module.exports = { sequelize, generateRandomSecretKey };
+export { sequelize, generateRandomSecretKey };
