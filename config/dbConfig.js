@@ -15,7 +15,6 @@ const dbConfig = {
 };
 
 const sequelize = new Sequelize(dbConfig);
-
 // Test database connection
 sequelize.authenticate()
     .then(() => {
