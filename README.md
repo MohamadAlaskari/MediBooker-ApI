@@ -2,58 +2,279 @@
 
 ## Description
 
-Web-basierte App zur Verwaltung von Praxisterminen, ermöglicht Ärzten und medizinischem Personal das einfache Planen und Koordinieren von Patiententerminen. Eine ähnliche Implementierung kann unter [MediBooker API](https://medi-booker-ap-i.vercel.app/) eingesehen werden.
+MediBooker-API ist eine umfassende Web-basierte Anwendung zur Verwaltung von Praxisterminen, die es Ärzten und medizinischem Personal ermöglicht, Patiententermine einfach zu planen und zu koordinieren. Die API bietet Echtzeit-Updates, sichere Authentifizierung und eine intuitive Benutzeroberfläche für die effiziente Verwaltung medizinischer Termine.
 
-Before using the MediBooker-API, ensure you have Node.js and npm installed.
-To set up the project, follow these steps:
+Eine Live-Demo der Anwendung ist verfügbar unter: [MediBooker API](https://medi-booker-ap-i.vercel.app/)
 
-https://auth-db972.hstgr.io/index.php?db=u252525807_T_verwaltung
+## Features
 
-### Install all dependencies:
+- 🏥 **Terminverwaltung**: Vollständige CRUD-Operationen für Termine und Reservierungen
+- 👥 **Benutzerverwaltung**: Separate Verwaltung für Patienten und medizinisches Personal
+- 🔐 **Sichere Authentifizierung**: JWT-basierte Authentifizierung mit Token-Management
+- ⚡ **Echtzeit-Updates**: WebSocket-Integration für Live-Updates
+- 📊 **Service-Management**: Verwaltung medizinischer Dienstleistungen
+- 🗄️ **Datenbank-Integration**: Sequelize ORM mit MySQL/PostgreSQL Support
+- 📚 **API-Dokumentation**: Vollständige Swagger/OpenAPI Dokumentation
+- 🚀 **Cloud-Deployment**: Vercel-Integration für einfaches Deployment
+- 🔧 **Fehlerbehandlung**: Zentrale Fehlerbehandlung mit detailliertem Logging
+- 📱 **Responsive Design**: Mobile-freundliche Benutzeroberfläche
 
+## Technology Stack
+
+- **Backend**: Node.js, Express.js
+- **Database**: MySQL/PostgreSQL mit Sequelize ORM
+- **Authentication**: JWT (JSON Web Tokens)
+- **Real-time Communication**: Socket.IO
+- **API Documentation**: Swagger/OpenAPI
+- **Deployment**: Vercel
+- **Version Control**: Git
+
+## Prerequisites
+
+Before using the MediBooker-API, ensure you have the following installed:
+
+- Node.js (v14 oder höher)
+- npm (v6 oder höher)
+- MySQL oder PostgreSQL Datenbank
+- Git (für Version Control)
+
+## Installation
+
+### 1. Repository klonen
+
+```bash
+git clone https://github.com/your-username/MediBooker-API.git
+cd MediBooker-API
+```
+
+### 2. Dependencies installieren
+
+```bash
 npm install
+```
 
-### To start the server:
+### 3. Umgebungsvariablen konfigurieren
 
+Erstelle eine `.env` Datei im Root-Verzeichnis:
+
+```env
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=medibooker
+DB_USER=your_username
+DB_PASSWORD=your_password
+
+# JWT Configuration
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRES_IN=24h
+
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+# WebSocket Configuration
+WEBSOCKET_PORT=3001
+```
+
+### 4. Datenbank einrichten
+
+```bash
+# Datenbank-Schema synchronisieren
+node sync-db.js
+
+# Testdaten generieren (optional)
+node fakedata.js
+```
+
+### 5. Server starten
+
+```bash
+# Development Mode
 npm start
+
+# Oder mit nodemon für automatisches Neuladen
+npm run dev
+```
+
+## Project Structure
+
+```
+MediBooker-API/
+├── config/                 # Datenbank-Konfiguration
+│   └── dbConfig.js
+├── controllers/           # API Controller
+│   ├── AppointmentController.js
+│   ├── employeesController.js
+│   ├── patientsController.js
+│   ├── ReservationController.js
+│   └── ServiceController.js
+├── middlewares/          # Express Middleware
+│   ├── authenticateToken.js
+│   ├── errorHandler.js
+│   ├── Socket.js
+│   └── tockenService.js
+├── models/              # Sequelize Models
+│   ├── Appointment.js
+│   ├── Employee.js
+│   ├── EmployeeToken.js
+│   ├── Patient.js
+│   ├── PatientToken.js
+│   ├── Reservation.js
+│   └── Service.js
+├── routes/              # API Routes
+│   ├── appointmentRoutes.js
+│   ├── employeesRoutes.js
+│   ├── patientsRoutes.js
+│   ├── reservationRoutes.js
+│   └── serviceRoutes.js
+├── services/            # Business Logic
+│   ├── websockets/
+│   │   ├── websocketHandlers.js
+│   │   ├── websocketInit.js
+│   │   └── websocketNotify.js
+│   └── websocketService.js
+├── doc/                 # Dokumentation
+│   ├── db.relations.png
+│   └── doc.txt
+├── index.js             # Hauptanwendung
+├── package.json
+├── swagger.js           # Swagger Konfiguration
+└── vercel.json          # Vercel Deployment
+```
 
 ## Database Management
 
-![alt text](DB.png)
+![Database Schema](DB.png)
+
+### Datenbank-Schema
+
+Die Anwendung verwendet folgende Hauptentitäten:
+
+- **Patients**: Patienteninformationen
+- **Employees**: Medizinisches Personal
+- **Appointments**: Termine
+- **Reservations**: Reservierungen
+- **Services**: Medizinische Dienstleistungen
+- **Tokens**: Authentifizierungstoken
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/login` - Benutzeranmeldung
+- `POST /api/auth/register` - Benutzerregistrierung
+- `POST /api/auth/logout` - Benutzerabmeldung
+- `POST /api/auth/refresh` - Token erneuern
+
+### Patients
+- `GET /api/patients` - Alle Patienten abrufen
+- `GET /api/patients/:id` - Einzelnen Patienten abrufen
+- `POST /api/patients` - Neuen Patienten erstellen
+- `PUT /api/patients/:id` - Patienten aktualisieren
+- `DELETE /api/patients/:id` - Patienten löschen
+
+### Employees
+- `GET /api/employees` - Alle Mitarbeiter abrufen
+- `GET /api/employees/:id` - Einzelnen Mitarbeiter abrufen
+- `POST /api/employees` - Neuen Mitarbeiter erstellen
+- `PUT /api/employees/:id` - Mitarbeiter aktualisieren
+- `DELETE /api/employees/:id` - Mitarbeiter löschen
+
+### Appointments
+- `GET /api/appointments` - Alle Termine abrufen
+- `GET /api/appointments/:id` - Einzelnen Termin abrufen
+- `POST /api/appointments` - Neuen Termin erstellen
+- `PUT /api/appointments/:id` - Termin aktualisieren
+- `DELETE /api/appointments/:id` - Termin löschen
+
+### Reservations
+- `GET /api/reservations` - Alle Reservierungen abrufen
+- `GET /api/reservations/:id` - Einzelne Reservierung abrufen
+- `POST /api/reservations` - Neue Reservierung erstellen
+- `PUT /api/reservations/:id` - Reservierung aktualisieren
+- `DELETE /api/reservations/:id` - Reservierung löschen
+
+### Services
+- `GET /api/services` - Alle Services abrufen
+- `GET /api/services/:id` - Einzelnen Service abrufen
+- `POST /api/services` - Neuen Service erstellen
+- `PUT /api/services/:id` - Service aktualisieren
+- `DELETE /api/services/:id` - Service löschen
 
 ## Database Operations
 
-To manage the database, use the following commands from the command line:
+### Datenbank verwalten
 
-### To drop the database:
-
+```bash
+# Datenbank löschen (ACHTUNG: Löscht alle Daten!)
 node drop-db.js
 
-### To synchronize the database schema:
-
+# Datenbank-Schema synchronisieren
 node sync-db.js
 
-### To generate fake data for testing:
-
+# Testdaten generieren
 node fakedata.js
+```
 
-## Swagger
+## API Documentation
 
-### To run the project and swagger Api Interface
+### Swagger Interface starten
 
+```bash
 node swagger.js
+```
 
-## Vercel
+Nach dem Start ist die interaktive API-Dokumentation verfügbar unter:
+- **Swagger UI**: `http://localhost:3000/api-docs`
+- **JSON Schema**: `http://localhost:3000/swagger-output.json`
 
-### To build the broject
+### API-Testing
 
+Die Swagger-Oberfläche ermöglicht:
+- Interaktives Testen aller Endpoints
+- Authentifizierung mit JWT-Token
+- Request/Response-Beispiele
+- Schema-Validierung
+
+## Deployment
+
+### Vercel Deployment
+
+#### Lokale Entwicklung
+
+```bash
+# Vercel CLI installieren
+npm install -g vercel
+
+# Lokale Entwicklung mit Vercel
 vercel dev
+```
 
-### To deploy the Projekt
+#### Produktions-Deployment
 
+```bash
+# Projekt builden
+vercel build
+
+# Produktions-Deployment
 vercel --prod
+```
 
-## Docummentation
+### Umgebungsvariablen für Vercel
+
+Konfiguriere folgende Umgebungsvariablen in der Vercel-Konsole:
+
+```env
+DB_HOST=your_database_host
+DB_PORT=3306
+DB_NAME=your_database_name
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+JWT_SECRET=your_jwt_secret
+NODE_ENV=production
+```
+
+## Documentation
 
 ### WebSocket-Integration in der Anwendung
 
@@ -91,6 +312,92 @@ Der WebSocket-Server kann auf spezifische Ereignisse hören und entsprechende Ak
 
 Mit dieser Integration von WebSockets stellt die MediBooker-API sicher, dass alle relevanten Informationen in Echtzeit an die Benutzer weitergegeben werden, was die Effizienz und Benutzererfahrung der Anwendung erheblich verbessert.
 
+## Troubleshooting
+
+### Häufige Probleme und Lösungen
+
+#### Datenbankverbindung fehlgeschlagen
+```bash
+# Überprüfe Datenbankverbindung
+node -e "console.log('Testing database connection...')"
+```
+
+#### JWT-Token Probleme
+- Überprüfe `JWT_SECRET` in der `.env` Datei
+- Stelle sicher, dass Token nicht abgelaufen sind
+- Überprüfe Token-Format in den Headers
+
+#### WebSocket-Verbindung
+- Überprüfe Port-Konfiguration
+- Stelle sicher, dass CORS richtig konfiguriert ist
+- Überprüfe Firewall-Einstellungen
+
+#### Vercel Deployment Probleme
+```bash
+# Logs überprüfen
+vercel logs
+
+# Lokale Umgebung testen
+vercel dev
+```
+
+### Debug-Modus aktivieren
+
+```bash
+# Mit Debug-Logging starten
+DEBUG=* npm start
+
+# Oder spezifische Module debuggen
+DEBUG=app:*,websocket:* npm start
+```
+
+## Contributing
+
+### Entwicklungsumgebung einrichten
+
+1. Fork das Repository
+2. Erstelle einen Feature-Branch
+3. Installiere Dependencies: `npm install`
+4. Konfiguriere Umgebungsvariablen
+5. Starte die Entwicklungsumgebung
+
+### Code-Standards
+
+- Verwende ESLint für Code-Qualität
+- Schreibe Tests für neue Features
+- Dokumentiere API-Änderungen
+- Folge den bestehenden Namenskonventionen
+
+### Pull Request Prozess
+
+1. Erstelle einen aussagekräftigen Titel
+2. Beschreibe die Änderungen detailliert
+3. Füge Tests hinzu (falls zutreffend)
+4. Stelle sicher, dass alle Tests bestehen
+5. Aktualisiere die Dokumentation
+
+## License
+
+Dieses Projekt steht unter der MIT-Lizenz. Siehe `LICENSE` Datei für Details.
+
+## Support
+
+Bei Fragen oder Problemen:
+
+- Erstelle ein Issue im GitHub Repository
+- Kontaktiere das Entwicklungsteam
+- Überprüfe die Dokumentation
+
+## Changelog
+
+### Version 1.0.0
+- Initiale Release
+- Vollständige CRUD-Operationen
+- JWT-Authentifizierung
+- WebSocket-Integration
+- Swagger-Dokumentation
+- Vercel-Deployment
+
 ### Fehlerbehandlung in der Anwendung
 
 Diese Anwendung verwendet eine zentrale Fehlerbehandlungsmiddleware, um sicherzustellen, dass alle Fehler konsistent verarbeitet und protokolliert werden. Dies hilft, die Anwendung robuster und wartbarer zu machen.
@@ -99,9 +406,9 @@ Diese Anwendung verwendet eine zentrale Fehlerbehandlungsmiddleware, um sicherzu
 
 Die Fehler-Middleware befindet sich im Verzeichnis middlewares und heißt errorHandler.js. Diese Middleware fängt alle Fehler ab, die in der Anwendung auftreten, protokolliert den Fehlerstack und sendet eine konsistente JSON-Antwort an den Client.
 
-Protokollierung: Die Middleware protokolliert den Fehlerstack zur Diagnose.
-Antwort: Eine JSON-Antwort mit dem Fehlerstatus und der Fehlermeldung wird an den Client gesendet.
-Umgebung: Im Entwicklungsmodus (NODE_ENV=development) werden zusätzliche Fehlerinformationen gesendet.
+- **Protokollierung**: Die Middleware protokolliert den Fehlerstack zur Diagnose.
+- **Antwort**: Eine JSON-Antwort mit dem Fehlerstatus und der Fehlermeldung wird an den Client gesendet.
+- **Umgebung**: Im Entwicklungsmodus (NODE_ENV=development) werden zusätzliche Fehlerinformationen gesendet.
 
 #### Einbindung der Fehler-Middleware
 
@@ -113,7 +420,7 @@ In den Controllern und Routen wird sichergestellt, dass alle auftretenden Fehler
 
 #### Vorteile der zentralen Fehlerbehandlung
 
-Konsistenz: Alle Fehler werden auf die gleiche Weise behandelt und protokolliert.
-Wartbarkeit: Änderungen am Fehlerbehandlungsverhalten müssen nur an einer Stelle vorgenommen werden.
-Sicherheit: Im Produktionsmodus werden keine sensiblen Fehlerinformationen an den Client gesendet.
-Diagnose: Im Entwicklungsmodus werden detaillierte Fehlerinformationen bereitgestellt, die bei der Diagnose und Behebung von Problemen helfen.
+- **Konsistenz**: Alle Fehler werden auf die gleiche Weise behandelt und protokolliert.
+- **Wartbarkeit**: Änderungen am Fehlerbehandlungsverhalten müssen nur an einer Stelle vorgenommen werden.
+- **Sicherheit**: Im Produktionsmodus werden keine sensiblen Fehlerinformationen an den Client gesendet.
+- **Diagnose**: Im Entwicklungsmodus werden detaillierte Fehlerinformationen bereitgestellt, die bei der Diagnose und Behebung von Problemen helfen.
